@@ -64,7 +64,7 @@ def generate_ip() -> str:
     )
 
 
-def _try_host(host, timeout, retries):
+def _try_host(out, host, timeout, retries):
     global CHECKED
     for judge in random.sample(JUDGES, retries):
         for port, proto in PORTS:
@@ -73,17 +73,18 @@ def _try_host(host, timeout, retries):
                 CHECKED += 1
                 if proxy.check(judge, timeout):
                     PROXIES.append(proxy)
-                    logger.info(str(proxy))
+                    logger.info(f'Found: {str(proxy)}')
+                    out.write(str(proxy) + '\n')
                     return
             except KeyboardInterrupt:
                 event.clear()
                 return
 
 
-def worker(timeout, retries):
+def worker(out, timeout, retries):
     while event.is_set():
         host = generate_ip()
-        _try_host(host, timeout, retries)
+        _try_host(out, host, timeout, retries)
 
 
 def stats():
@@ -115,23 +116,25 @@ def main():
     args = parser.parse_args()
     event.set()
 
-    Thread(target=stats, daemon=True).start()
+    filename = f'working_proxies{int(time.time()) % 10000}.txt'
+    logger.info(f'Proxies will be saved into {filename}')
+    file = open(filename, 'wa')
+
     for _ in range(args.threads // 100):
         for _ in range(100):
-            Thread(target=worker, args=(args.timeout, args.retries), daemon=True).start()
+            Thread(target=worker, args=(file, args.timeout, args.retries), daemon=True).start()
         time.sleep(0.1)
+
+    Thread(target=stats, daemon=True).start()
     try:
         while True:
             time.sleep(2)
+            file.flush()
     except KeyboardInterrupt:
         logger.info('Shutting down')
         event.clear()
-        if PROXIES:
-            filename = f'working_proxies{int(time.time())}.txt'
-            logger.info(f'Saving {len(PROXIES)} into {filename}')
-            with open(filename, 'w') as f:
-                for proxy in PROXIES:
-                    f.write(str(proxy) + '\n')
+        logger.info(f'Saved {len(PROXIES)} into {filename}')
+        file.close()
 
 
 if __name__ == '__main__':
