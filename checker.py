@@ -65,11 +65,15 @@ def _try_host(host, timeout, retries):
     global CHECKED
     for judge in random.sample(JUDGES, retries):
         for port, proto in PORTS:
-            proxy = Proxy(host, port, ProxyType.HTTP)
-            CHECKED += 1
-            if proxy.check(judge, timeout):
-                PROXIES.append(proxy)
-                logger.info(str(proxy))
+            try:
+                proxy = Proxy(host, port, ProxyType.HTTP)
+                CHECKED += 1
+                if proxy.check(judge, timeout):
+                    PROXIES.append(proxy)
+                    logger.info(str(proxy))
+                    return
+            except KeyboardInterrupt:
+                event.clear()
                 return
 
 
