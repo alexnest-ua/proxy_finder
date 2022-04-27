@@ -118,7 +118,7 @@ def main():
 
     filename = f'working_proxies{int(time.time()) % 10000}.txt'
     logger.info(f'Proxies will be saved into {filename}')
-    file = open(filename, 'wa')
+    file = open(filename, 'a')
 
     for _ in range(args.threads // 100):
         for _ in range(100):
