@@ -7,6 +7,7 @@ import logging
 import random
 import socket
 import time
+from contextlib import suppress
 from ipaddress import IPv4Address
 from threading import Event, Thread
 
@@ -84,7 +85,21 @@ def stats():
         time.sleep(10)
 
 
+def fix_ulimits():
+    try:
+        import resource
+    except ImportError:
+        return
+
+    soft, hard = resource.getrlimit(resource.RLIMIT_NOFILE)
+    if soft < hard:
+        with suppress(Exception):
+            resource.setrlimit(resource.RLIMIT_NOFILE, (hard, hard))
+
+
 def main():
+    fix_ulimits()
+
     parser = argparse.ArgumentParser()
     parser.add_argument('--threads', type=int, default=5000)
     parser.add_argument('--timeout', type=int, default=3)
