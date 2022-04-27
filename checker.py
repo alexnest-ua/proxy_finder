@@ -11,7 +11,7 @@ from contextlib import suppress
 from ipaddress import IPv4Address
 from threading import Event, Thread
 
-from PyRoxy import Proxy, ProxyType
+from PyRoxy import Proxy, ProxyType, Tools
 from yarl import URL
 
 from networks import RU_NETWORK
@@ -55,6 +55,9 @@ PORTS = (
 
 
 def generate_ip() -> str:
+    if random.random() < 0.5:
+        return Tools.Random.rand_ipv4()
+
     ip_from, ip_to = random.choice(RU_NETWORK)
     return IPv4Address._string_from_ip_int(
         random.randint(ip_from, ip_to)
