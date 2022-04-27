@@ -2,19 +2,23 @@
 try:import gevent.monkey; gevent.monkey.patch_all()
 except:raise
 # @formatter:on
-
 import argparse
+import logging
 import random
 import socket
 import time
 from ipaddress import IPv4Address
-from threading import Thread
+from threading import Event, Thread
 
 from PyRoxy import Proxy, ProxyType
 from yarl import URL
 
 from networks import RU_NETWORK
 
+
+logging.basicConfig(format='[%(asctime)s - %(levelname)s] %(message)s', datefmt="%H:%M:%S")
+logger = logging.getLogger('mhddos_proxy')
+logger.setLevel('INFO')
 
 JUDGES = [
     URL(judge).with_host(
@@ -37,6 +41,7 @@ JUDGES = [
 
 PROXIES = []
 CHECKED = 0
+event = Event()
 
 PORTS = (
     (8080, ProxyType.HTTP),
@@ -63,14 +68,20 @@ def _try_host(host, timeout, retries):
             CHECKED += 1
             if proxy.check(judge, timeout):
                 PROXIES.append(proxy)
-                print(str(proxy))
+                logger.info(str(proxy))
                 return
 
 
 def worker(timeout, retries):
-    while True:
+    while event.is_set():
         host = generate_ip()
         _try_host(host, timeout, retries)
+
+
+def stats():
+    while event.is_set():
+        logger.info(f'Checked: {CHECKED} | Found: {len(PROXIES)}')
+        time.sleep(10)
 
 
 def main():
@@ -80,18 +91,23 @@ def main():
     parser.add_argument('--retries', type=int, default=1)
 
     args = parser.parse_args()
+    event.set()
+
+    Thread(target=stats, daemon=True).start()
     for _ in range(args.threads // 100):
         for _ in range(100):
             Thread(target=worker, args=(args.timeout, args.retries), daemon=True).start()
         time.sleep(0.1)
-
     try:
         while True:
-            time.sleep(30)
-            print(f'Checked: {CHECKED} | Found: {len(PROXIES)}')
-    finally:
+            time.sleep(2)
+    except KeyboardInterrupt:
+        logger.info('Shutting down')
+        event.clear()
         if PROXIES:
-            with open(f'working_proxies{int(time.time())}.txt', 'w') as f:
+            filename = f'working_proxies{int(time.time())}.txt'
+            logger.info(f'Saving {len(PROXIES)} into {filename}')
+            with open(filename, 'w') as f:
                 for proxy in PROXIES:
                     f.write(str(proxy) + '\n')
 
