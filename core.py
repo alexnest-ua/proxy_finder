@@ -1,7 +1,13 @@
+import logging
 import socket
+from contextlib import suppress
 
 from yarl import URL
 
+
+logging.basicConfig(format='[%(asctime)s - %(levelname)s] %(message)s', datefmt="%H:%M:%S")
+logger = logging.getLogger('proxy_checker')
+logger.setLevel('INFO')
 
 JUDGES = [
     URL(judge).with_host(
@@ -21,3 +27,15 @@ JUDGES = [
         'http://google.ru/',
     ]
 ]
+
+
+def fix_ulimits():
+    try:
+        import resource
+    except ImportError:
+        return
+
+    soft, hard = resource.getrlimit(resource.RLIMIT_NOFILE)
+    if soft < hard:
+        with suppress(Exception):
+            resource.setrlimit(resource.RLIMIT_NOFILE, (hard, hard))

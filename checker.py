@@ -3,23 +3,17 @@ try:import gevent.monkey; gevent.monkey.patch_all()
 except:raise
 # @formatter:on
 import argparse
-import logging
 import os
 import random
 import time
-from contextlib import suppress
 from ipaddress import IPv4Address
 from threading import Event, Thread
 
 from PyRoxy import Proxy, ProxyType, Tools
 
-from judges import JUDGES
+from core import JUDGES, fix_ulimits, logger
 from networks import random_ip_range
 
-
-logging.basicConfig(format='[%(asctime)s - %(levelname)s] %(message)s', datefmt="%H:%M:%S")
-logger = logging.getLogger('mhddos_proxy')
-logger.setLevel('INFO')
 
 PROXIES = []
 CHECKED = 0
@@ -66,18 +60,6 @@ def worker(out, timeout, retries):
     while event.is_set():
         host = generate_ip()
         _try_host(out, host, timeout, retries)
-
-
-def fix_ulimits():
-    try:
-        import resource
-    except ImportError:
-        return
-
-    soft, hard = resource.getrlimit(resource.RLIMIT_NOFILE)
-    if soft < hard:
-        with suppress(Exception):
-            resource.setrlimit(resource.RLIMIT_NOFILE, (hard, hard))
 
 
 def main(file):
