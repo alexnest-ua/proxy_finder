@@ -44,7 +44,7 @@ def _try_host(out, host, timeout, retries):
     for judge in random.sample(JUDGES, retries):
         for port, proto in PORTS:
             try:
-                proxy = Proxy(host, port, ProxyType.HTTP)
+                proxy = Proxy(host, port, proto)
                 CHECKED += 1
                 if proxy.check(judge, timeout):
                     PROXIES.append(proxy)
