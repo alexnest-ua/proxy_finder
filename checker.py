@@ -4,6 +4,7 @@ except:raise
 # @formatter:on
 import argparse
 import logging
+import os
 import random
 import socket
 import time
@@ -78,19 +79,13 @@ def _try_host(out, host, timeout, retries):
                     return
             except KeyboardInterrupt:
                 event.clear()
-                return
+                raise
 
 
 def worker(out, timeout, retries):
     while event.is_set():
         host = generate_ip()
         _try_host(out, host, timeout, retries)
-
-
-def stats():
-    while event.is_set():
-        logger.info(f'Checked: {CHECKED} | Found: {len(PROXIES)}')
-        time.sleep(10)
 
 
 def fix_ulimits():
@@ -105,37 +100,52 @@ def fix_ulimits():
             resource.setrlimit(resource.RLIMIT_NOFILE, (hard, hard))
 
 
-def main():
+def main(file):
     fix_ulimits()
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--threads', type=int, default=5000)
+    parser.add_argument('--threads', type=int, default=10000)
     parser.add_argument('--timeout', type=int, default=3)
     parser.add_argument('--retries', type=int, default=1)
 
     args = parser.parse_args()
     event.set()
 
-    filename = f'working_proxies{int(time.time()) % 10000}.txt'
-    logger.info(f'Proxies will be saved into {filename}')
-    file = open(filename, 'a')
+    threads = args.threads
+    threads_limit = 15000
+    if threads > threads_limit:
+        logger.warning(f'Max 15.000 threads')
+        threads = threads_limit
 
     for _ in range(100):
-        for _ in range(args.threads // 100):
+        for _ in range(threads // 100):
             Thread(target=worker, args=(file, args.timeout, args.retries), daemon=True).start()
-        time.sleep(0.1)
+        time.sleep(0.01)
 
-    Thread(target=stats, daemon=True).start()
+    logger.info('All threads started')
+
+    while event.is_set():
+        time.sleep(10)
+        file.flush()
+        logger.info(f'Checked: {CHECKED} | Found: {len(PROXIES)}')
+
+
+def main_wrapper():
+    filename = f'proxy_{int(time.time())}.txt'
+    logger.info(f'Proxies will be saved into {filename}')
+    file = open(filename, 'w')
     try:
-        while True:
-            time.sleep(2)
-            file.flush()
-    except KeyboardInterrupt:
+        main(file)
+    except:
         logger.info('Shutting down')
         event.clear()
-        logger.info(f'Saved {len(PROXIES)} into {filename}')
+        if PROXIES:
+            logger.info(f'Saved {len(PROXIES)} into {filename}')
+        else:
+            logger.warning(f'No proxies found, deleting {filename}')
+            os.remove(filename)
         file.close()
 
 
 if __name__ == '__main__':
-    main()
+    main_wrapper()
