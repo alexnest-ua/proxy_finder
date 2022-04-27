@@ -1,5 +1,6 @@
 import csv
 import glob
+import random
 from ipaddress import IPv4Address
 
 
@@ -12,4 +13,9 @@ def load():
                     yield int(IPv4Address(row[0])), int(IPv4Address(row[1]))
 
 
-IP_RANGES = list(load())
+_IP_RANGES = list(load())
+_WEIGHTS = [r[1] - r[0] for r in _IP_RANGES]
+
+
+def random_ip_range():
+    return random.choices(_IP_RANGES, weights=_WEIGHTS, k=1)[0]

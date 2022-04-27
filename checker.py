@@ -15,7 +15,7 @@ from threading import Event, Thread
 from PyRoxy import Proxy, ProxyType, Tools
 from yarl import URL
 
-from networks import IP_RANGES
+from networks import random_ip_range
 
 
 logging.basicConfig(format='[%(asctime)s - %(levelname)s] %(message)s', datefmt="%H:%M:%S")
@@ -59,7 +59,7 @@ def generate_ip() -> str:
     if random.random() < 0.5:
         return Tools.Random.rand_ipv4()
 
-    ip_from, ip_to = random.choice(IP_RANGES)
+    ip_from, ip_to = random_ip_range()
     return IPv4Address._string_from_ip_int(
         random.randint(ip_from, ip_to)
     )
