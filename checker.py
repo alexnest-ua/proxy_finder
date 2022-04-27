@@ -6,40 +6,20 @@ import argparse
 import logging
 import os
 import random
-import socket
 import time
 from contextlib import suppress
 from ipaddress import IPv4Address
 from threading import Event, Thread
 
 from PyRoxy import Proxy, ProxyType, Tools
-from yarl import URL
 
+from judges import JUDGES
 from networks import random_ip_range
 
 
 logging.basicConfig(format='[%(asctime)s - %(levelname)s] %(message)s', datefmt="%H:%M:%S")
 logger = logging.getLogger('mhddos_proxy')
 logger.setLevel('INFO')
-
-JUDGES = [
-    URL(judge).with_host(
-        socket.gethostbyname(
-            URL(judge).host
-        )
-    )
-    for judge in [
-        'http://www.proxy-listen.de/azenv.php',
-        'http://www.wfuchs.de/azenv.php',
-        'http://users.ugent.be/~bfdwever/start/env.cgi',
-        'http://mojeip.net.pl/asdfa/azenv.php',
-        'http://www.meow.org.uk/cgi-bin/env.pl',
-        'http://httpheader.net',
-        'tcp://1.1.1.1:53',
-        'tcp://8.8.8.8:53',
-        'http://google.ru/',
-    ]
-]
 
 PROXIES = []
 CHECKED = 0
