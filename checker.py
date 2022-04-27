@@ -120,8 +120,8 @@ def main():
     logger.info(f'Proxies will be saved into {filename}')
     file = open(filename, 'a')
 
-    for _ in range(args.threads // 100):
-        for _ in range(100):
+    for _ in range(100):
+        for _ in range(args.threads // 100):
             Thread(target=worker, args=(file, args.timeout, args.retries), daemon=True).start()
         time.sleep(0.1)
 
