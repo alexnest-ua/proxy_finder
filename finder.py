@@ -21,11 +21,7 @@ event = Event()
 
 PORTS = (
     (8080, ProxyType.HTTP),
-    (999, ProxyType.HTTP),
-
     (5678, ProxyType.SOCKS4),
-    (4153, ProxyType.SOCKS4),
-    (4145, ProxyType.SOCKS4),
 )
 
 
