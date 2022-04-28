@@ -62,7 +62,7 @@ def main(file):
     fix_ulimits()
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--threads', type=int, default=10000)
+    parser.add_argument('--threads', type=int, default=5000)
     parser.add_argument('--timeout', type=int, default=3)
     parser.add_argument('--retries', type=int, default=1)
 
