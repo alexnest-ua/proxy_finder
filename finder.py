@@ -169,7 +169,7 @@ def main(file):
     args = parser.parse_args()
 
     threads = args.threads
-    threads_limit = 10000 if GEVENT else 5000
+    threads_limit = 10000 if GEVENT else 3000
     if not GEVENT:
         logger.warning(f'{cl.MAGENTA}gevent не встановлено - підвищене використання системних ресурсів{cl.RESET}')
 
