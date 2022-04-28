@@ -99,7 +99,7 @@ def load_config(old_config, event, outfile, timeout, retries):
     elif old_config:
         return old_config
     else:
-        logger.error(f'{cl.RED}Не вдалося завантажити конфіг - перевірте мережу!{cl.RESET}')
+        logger.error(f'{cl.RED}Не вдалося завантажити налаштування - перевірте мережу!{cl.RESET}')
         raise RuntimeError
 
 
@@ -162,19 +162,19 @@ def main(file):
     fix_ulimits()
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--threads', type=int, default=5000 if GEVENT else 2000)
+    parser.add_argument('--threads', type=int, default=5000 if GEVENT else 1000)
     parser.add_argument('--timeout', type=int, default=None)
     parser.add_argument('--retries', type=int, default=None)
 
     args = parser.parse_args()
 
     threads = args.threads
-    threads_limit = 10000 if GEVENT else 5000
+    threads_limit = 10000 if GEVENT else 2000
     if not GEVENT:
         logger.warning(f'{cl.MAGENTA}gevent не встановлено - підвищене використання системних ресурсів{cl.RESET}')
 
     if threads > threads_limit:
-        logger.warning(f'Обмеження {threads_limit} потоків!')
+        logger.warning(f'{cl.MAGENTA}Обмеження {threads_limit} потоків!{cl.RESET}')
         threads = threads_limit
 
     period = 30
@@ -186,18 +186,19 @@ def main(file):
         event.set()
         config = load_config(config, event, file, args.timeout, args.retries)
         start_workers(threads, config)
-        logger.info(f'{cl.BLUE}Усі процеси запущено!{cl.RESET}')
+        logger.info(f'{cl.GREEN}Усі процеси запущено!{cl.RESET}')
 
         while event.is_set():
-            time.sleep(period)
-            logger.info(f'Перевірено: {CHECKED.value()} | Знайдено: {FOUND.value()}')
+            logger.info(
+                f'{cl.YELLOW}Перевірено: {cl.BLUE}{CHECKED.value()}{cl.YELLOW} | Знайдено: {cl.BLUE}{FOUND.value()}{cl.RESET}')
             file.flush()
             iterations += 1
             if period * iterations > restart_after:
-                logger.info('Перезапускаємо процеси для стабільної роботи...')
+                logger.info(f'{cl.MAGENTA}Перезапускаємо процеси для стабільної роботи...{cl.RESET}')
                 event.clear()
                 time.sleep(args.timeout * args.retries)
                 break
+            time.sleep(period)
 
 
 def main_wrapper():
@@ -206,19 +207,18 @@ def main_wrapper():
 
     filename = f'proxy_{int(time.time())}.txt'
     logger.info(
-        f'Проксі будуть автоматично відправлені на сервер, а також збережені у файл {cl.YELLOW}{filename}{cl.RESET}'
-    )
+        f'{cl.YELLOW}Проксі будуть автоматично відправлені на сервер, а також збережені у файл {cl.BLUE}{filename}{cl.RESET}')
     file = open(filename, 'w')
     try:
         main(file)
     except:
-        logger.info(f'{Fore.LIGHTBLUE_EX}Завершуємо роботу{Fore.RESET}')
+        logger.info(f'{cl.MAGENTA}Завершуємо роботу{cl.RESET}')
     finally:
         found = FOUND.value()
         if found:
-            logger.info(f'Збережено {cl.BLUE}{found}{cl.RESET} у файл {cl.YELLOW}{filename}{cl.RESET}')
+            logger.info(f'{cl.YELLOW}Збережено {cl.BLUE}{found}{cl.YELLOW} у файл {cl.BLUE}{filename}{cl.RESET}')
         else:
-            logger.warning(f'Проксі не знайдено, видаляємо файл {cl.YELLOW}{filename}{cl.RESET}')
+            logger.warning(f'{cl.YELLOW}Проксі не знайдено, видаляємо файл {cl.BLUE}{filename}{cl.RESET}')
             os.remove(filename)
         file.close()
 
