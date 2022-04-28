@@ -186,7 +186,6 @@ def main(file):
         event.set()
         config = load_config(config, event, file, args.timeout, args.retries)
         start_workers(threads, config)
-        logger.info(f'{cl.GREEN}Усі процеси пошуку проксі запущено!{cl.RESET}')
 
         while event.is_set():
             logger.info(
@@ -194,7 +193,6 @@ def main(file):
             file.flush()
             iterations += 1
             if period * iterations > restart_after:
-                logger.info(f'{cl.MAGENTA}Перезапускаємо процеси пошуку проксі для стабільної роботи...{cl.RESET}')
                 event.clear()
                 time.sleep(config.timeout * config.retries)
                 break
