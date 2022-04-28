@@ -1,3 +1,7 @@
+# @formatter:off
+try:import gevent.monkey; gevent.monkey.patch_all()
+except:raise
+# @formatter:on
 import argparse
 import random
 import time
@@ -48,7 +52,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('infile')
     parser.add_argument('outfile')
-    parser.add_argument('--threads', type=int, default=5000)
+    parser.add_argument('--threads', type=int, default=10000)
     parser.add_argument('--timeout', type=int, default=5)
     parser.add_argument('--retries', type=int, default=2)
 
