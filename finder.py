@@ -196,7 +196,7 @@ def main(file):
             if period * iterations > restart_after:
                 logger.info(f'{cl.MAGENTA}Перезапускаємо процеси пошуку проксі для стабільної роботи...{cl.RESET}')
                 event.clear()
-                time.sleep(args.timeout * args.retries)
+                time.sleep(config.timeout * config.retries)
                 break
             time.sleep(period)
 
