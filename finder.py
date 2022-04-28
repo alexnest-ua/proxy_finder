@@ -19,10 +19,10 @@ from report import report_proxy
 CHECKED = 0
 FOUND = 0
 
-PORTS = (
+PORTS = [
     (8080, ProxyType.HTTP),
     (5678, ProxyType.SOCKS4),
-)
+]
 
 
 def _report_proxy(proxy):
@@ -86,8 +86,15 @@ def main(file):
     parser.add_argument('--threads', type=int, default=5000)
     parser.add_argument('--timeout', type=int, default=3)
     parser.add_argument('--retries', type=int, default=1)
+    parser.add_argument('--socks5', default=False, action='store_true')
 
     args = parser.parse_args()
+
+    if args.socks5:
+        PORTS.extend((
+            (5389, ProxyType.SOCKS5),
+            (1080, ProxyType.SOCKS5),
+        ))
 
     threads = args.threads
     threads_limit = 10000
