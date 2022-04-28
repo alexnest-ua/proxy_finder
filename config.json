@@ -1,0 +1,15 @@
+{
+  "timeout": 3,
+  "retries": 1,
+  "random_percents": 0.5,
+  "targets": [
+    {
+      "proto": "http",
+      "port": 8080
+    },
+    {
+      "proto": "socks4",
+      "port": 5678
+    }
+  ]
+}

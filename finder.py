@@ -9,19 +9,45 @@ except ImportError:
 # @formatter:on
 import argparse
 import itertools
+import json
 import os
 import random
 import threading
 import time
+from collections import namedtuple
 from ipaddress import IPv4Address
 from threading import Event, Thread
 
+import requests
 from PyRoxy import Proxy, ProxyType, Tools
 from colorama import Fore
 
 from core import JUDGES, fix_ulimits, logger
 from networks import random_ip_range
 from report import report_proxy
+
+
+CONFIG_URL = 'https://raw.githubusercontent.com/porthole-ascend-cinnamon/proxy_finder/main/config.json'
+VERSION_URL = 'https://raw.githubusercontent.com/porthole-ascend-cinnamon/proxy_finder/main/version.txt'
+
+
+def fetch(url):
+    attempts = 3
+    for attempt in range(attempts):
+        try:
+            response = requests.get(url, timeout=5)
+            response.raise_for_status()
+            return response.text
+        except requests.RequestException:
+            pass
+    return None
+
+
+def is_latest_version():
+    latest = int(fetch(VERSION_URL).strip())
+    with open('version.txt', 'r') as f:
+        current = int(f.read().strip())
+    return current >= latest
 
 
 class cl:
@@ -52,10 +78,29 @@ class FastWriteCounter:
 CHECKED = FastWriteCounter()
 FOUND = FastWriteCounter()
 
-PORTS = [
-    (8080, ProxyType.HTTP),
-    (5678, ProxyType.SOCKS4),
-]
+Config = namedtuple('Config', ('event', 'outfile', 'timeout', 'retries', 'targets', 'random_percents'))
+
+
+def load_config(old_config, event, outfile, timeout, retries):
+    response = fetch(CONFIG_URL)
+    if response:
+        data = json.loads(response)
+        return Config(
+            event,
+            outfile,
+            timeout or data['timeout'],
+            retries or data['retries'],
+            [
+                (target['port'], ProxyType[target['proto'].upper()])
+                for target in data['targets']
+            ],
+            data['random_percents']
+        )
+    elif old_config:
+        return old_config
+    else:
+        logger.error(f'{cl.RED}Не вдалося завантажити конфіг - перевірте мережу!{cl.RESET}')
+        raise RuntimeError
 
 
 def _report_proxy(proxy):
@@ -72,8 +117,8 @@ def report_success(proxy):
     Thread(target=_report_proxy, args=[str(proxy)], daemon=True).start()
 
 
-def generate_ip() -> str:
-    if random.random() < 0.5:
+def generate_ip(random_percents) -> str:
+    if random.random() < random_percents:
         return Tools.Random.rand_ipv4()
 
     ip_from, ip_to = random_ip_range()
@@ -82,34 +127,34 @@ def generate_ip() -> str:
     )
 
 
-def _try_host(event, out, host, timeout, retries):
+def _try_host(config, host):
     try:
-        for judge in random.sample(JUDGES, retries):
-            for port, proto in PORTS:
-                if not event.is_set():
+        for judge in random.sample(JUDGES, config.retries):
+            for port, proto in config.targets:
+                if not config.event.is_set():
                     return
 
                 proxy = Proxy(host, port, proto)
                 CHECKED.increment()
-                if proxy.check(judge, timeout):
+                if proxy.check(judge, config.timeout):
                     FOUND.increment()
                     report_success(proxy)
-                    out.write(str(proxy) + '\n')
+                    config.outfile.write(str(proxy) + '\n')
                     return
     except KeyboardInterrupt:
-        event.clear()
+        config.event.clear()
 
 
-def worker(event, out, timeout, retries):
-    while event.is_set():
-        host = generate_ip()
-        _try_host(event, out, host, timeout, retries)
+def worker(config):
+    while config.event.is_set():
+        host = generate_ip(config.random_percents)
+        _try_host(config, host)
 
 
-def start_workers(threads, event, file, timeout, retries):
+def start_workers(threads, config):
     for _ in range(100):
         for _ in range(max(threads // 100, 1)):
-            Thread(target=worker, args=(event, file, timeout, retries), daemon=True).start()
+            Thread(target=worker, args=(config,), daemon=True).start()
         time.sleep(0.01)
 
 
@@ -118,22 +163,15 @@ def main(file):
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--threads', type=int, default=5000 if GEVENT else 2000)
-    parser.add_argument('--timeout', type=int, default=3)
-    parser.add_argument('--retries', type=int, default=1)
-    parser.add_argument('--socks5', default=False, action='store_true')
+    parser.add_argument('--timeout', type=int, default=None)
+    parser.add_argument('--retries', type=int, default=None)
 
     args = parser.parse_args()
-
-    if args.socks5:
-        PORTS.extend((
-            (5389, ProxyType.SOCKS5),
-            (1080, ProxyType.SOCKS5),
-        ))
 
     threads = args.threads
     threads_limit = 10000 if GEVENT else 5000
     if not GEVENT:
-        logger.warning(f'{cl.MAGENTA}gevent не встановлено - потребується більше системних ресурсів{cl.RESET}')
+        logger.warning(f'{cl.MAGENTA}gevent не встановлено - підвищене використання системних ресурсів{cl.RESET}')
 
     if threads > threads_limit:
         logger.warning(f'Обмеження {threads_limit} потоків!')
@@ -141,11 +179,13 @@ def main(file):
 
     period = 30
     restart_after = 900  # 15 minutes
+    config = None
     while True:
         iterations = 0
         event = Event()
         event.set()
-        start_workers(threads, event, file, args.timeout, args.retries)
+        config = load_config(config, event, file, args.timeout, args.retries)
+        start_workers(threads, config)
         logger.info(f'{cl.BLUE}Усі процеси запущено!{cl.RESET}')
 
         while event.is_set():
@@ -161,6 +201,9 @@ def main(file):
 
 
 def main_wrapper():
+    if not is_latest_version():
+        logger.warning(f'{cl.RED}Запущена не остання версія - рекоменовано оновитися{cl.RESET}')
+
     filename = f'proxy_{int(time.time())}.txt'
     logger.info(
         f'Проксі будуть автоматично відправлені на сервер, а також збережені у файл {cl.YELLOW}{filename}{cl.RESET}'
