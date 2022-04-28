@@ -16,9 +16,8 @@ from networks import random_ip_range
 from report import report_proxy
 
 
-PROXIES = []
 CHECKED = 0
-event = Event()
+FOUND = 0
 
 PORTS = (
     (8080, ProxyType.HTTP),
@@ -48,27 +47,36 @@ def generate_ip() -> str:
     )
 
 
-def _try_host(out, host, timeout, retries):
-    global CHECKED
-    for judge in random.sample(JUDGES, retries):
-        for port, proto in PORTS:
-            try:
+def _try_host(event, out, host, timeout, retries):
+    global CHECKED, FOUND
+    try:
+        for judge in random.sample(JUDGES, retries):
+            for port, proto in PORTS:
+                if not event.is_set():
+                    return
+
                 proxy = Proxy(host, port, proto)
                 CHECKED += 1
                 if proxy.check(judge, timeout):
-                    PROXIES.append(proxy)
+                    FOUND += 1
                     report_success(proxy)
                     out.write(str(proxy) + '\n')
                     return
-            except KeyboardInterrupt:
-                event.clear()
-                raise
+    except KeyboardInterrupt:
+        event.clear()
 
 
-def worker(out, timeout, retries):
+def worker(event, out, timeout, retries):
     while event.is_set():
         host = generate_ip()
-        _try_host(out, host, timeout, retries)
+        _try_host(event, out, host, timeout, retries)
+
+
+def start_workers(threads, event, file, timeout, retries):
+    for _ in range(100):
+        for _ in range(max(threads // 100, 1)):
+            Thread(target=worker, args=(event, file, timeout, retries), daemon=True).start()
+        time.sleep(0.01)
 
 
 def main(file):
@@ -80,25 +88,32 @@ def main(file):
     parser.add_argument('--retries', type=int, default=1)
 
     args = parser.parse_args()
-    event.set()
 
     threads = args.threads
-    threads_limit = 15000
+    threads_limit = 10000
     if threads > threads_limit:
-        logger.warning(f'Обмеження 15.000 потоків!')
+        logger.warning(f'Обмеження {threads_limit} потоків!')
         threads = threads_limit
 
-    for _ in range(100):
-        for _ in range(threads // 100):
-            Thread(target=worker, args=(file, args.timeout, args.retries), daemon=True).start()
-        time.sleep(0.01)
+    period = 30
+    restart_after = 900  # 15 minutes
+    while True:
+        iterations = 0
+        event = Event()
+        event.set()
+        start_workers(threads, event, file, args.timeout, args.retries)
+        logger.info('Усі процеси запущено!')
 
-    logger.info('Усі процеси запущено!')
-
-    while event.is_set():
-        time.sleep(10)
-        file.flush()
-        logger.info(f'Перевірено: {CHECKED} | Знайдено: {len(PROXIES)}')
+        while event.is_set():
+            time.sleep(period)
+            logger.info(f'Перевірено: {CHECKED} | Знайдено: {FOUND}')
+            file.flush()
+            iterations += 1
+            if period * iterations > restart_after:
+                logger.info('Перезапускаємо процеси для стабільної роботи...')
+                event.clear()
+                time.sleep(args.timeout * args.retries)
+                break
 
 
 def main_wrapper():
@@ -109,9 +124,9 @@ def main_wrapper():
         main(file)
     except:
         logger.info('Завершуємо роботу')
-        event.clear()
-        if PROXIES:
-            logger.info(f'Збережено {len(PROXIES)} у файл {filename}')
+    finally:
+        if FOUND:
+            logger.info(f'Збережено {FOUND} у файл {filename}')
         else:
             logger.warning(f'Проксі не знайдено, видаляємо файл {filename}')
             os.remove(filename)
