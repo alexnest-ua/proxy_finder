@@ -1,3 +1,4 @@
 requests==2.27.1
 git+https://github.com/porthole-ascend-cinnamon/PyRoxy.git
+colorama==0.4.4
 gevent==21.12.0
