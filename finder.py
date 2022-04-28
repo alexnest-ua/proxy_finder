@@ -162,14 +162,14 @@ def main(file):
     fix_ulimits()
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--threads', type=int, default=5000 if GEVENT else 1000)
+    parser.add_argument('--threads', type=int, default=5000 if GEVENT else 2000)
     parser.add_argument('--timeout', type=int, default=None)
     parser.add_argument('--retries', type=int, default=None)
 
     args = parser.parse_args()
 
     threads = args.threads
-    threads_limit = 10000 if GEVENT else 2000
+    threads_limit = 10000 if GEVENT else 5000
     if not GEVENT:
         logger.warning(f'{cl.MAGENTA}gevent не встановлено - підвищене використання системних ресурсів{cl.RESET}')
 
