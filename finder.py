@@ -13,6 +13,7 @@ from PyRoxy import Proxy, ProxyType, Tools
 
 from core import JUDGES, fix_ulimits, logger
 from networks import random_ip_range
+from report import report_proxy
 
 
 PROXIES = []
@@ -23,6 +24,18 @@ PORTS = (
     (8080, ProxyType.HTTP),
     (5678, ProxyType.SOCKS4),
 )
+
+
+def _report_proxy(proxy):
+    result = report_proxy(proxy)
+    if result:
+        logger.info(f'Проксі {proxy} надіслано, дякуємо!')
+    else:
+        logger.warning(f'На жаль, проксі {proxy} не надіслане - зверніться до адміністратора')
+
+
+def report_success(proxy):
+    Thread(target=_report_proxy, args=[str(proxy)], daemon=True).start()
 
 
 def generate_ip() -> str:
@@ -44,7 +57,7 @@ def _try_host(out, host, timeout, retries):
                 CHECKED += 1
                 if proxy.check(judge, timeout):
                     PROXIES.append(proxy)
-                    logger.info(f'Found: {str(proxy)}')
+                    report_success(proxy)
                     out.write(str(proxy) + '\n')
                     return
             except KeyboardInterrupt:
@@ -72,7 +85,7 @@ def main(file):
     threads = args.threads
     threads_limit = 15000
     if threads > threads_limit:
-        logger.warning(f'Max 15.000 threads')
+        logger.warning(f'Обмеження 15.000 потоків!')
         threads = threads_limit
 
     for _ in range(100):
@@ -80,27 +93,27 @@ def main(file):
             Thread(target=worker, args=(file, args.timeout, args.retries), daemon=True).start()
         time.sleep(0.01)
 
-    logger.info('All threads started')
+    logger.info('Усі процеси запущено!')
 
     while event.is_set():
         time.sleep(10)
         file.flush()
-        logger.info(f'Checked: {CHECKED} | Found: {len(PROXIES)}')
+        logger.info(f'Перевірено: {CHECKED} | Знайдено: {len(PROXIES)}')
 
 
 def main_wrapper():
     filename = f'proxy_{int(time.time())}.txt'
-    logger.info(f'Proxies will be saved into {filename}')
+    logger.info(f'Проксі будуть автоматично відправлені на сервер, а також збережені у файл {filename}')
     file = open(filename, 'w')
     try:
         main(file)
     except:
-        logger.info('Shutting down')
+        logger.info('Завершуємо роботу')
         event.clear()
         if PROXIES:
-            logger.info(f'Saved {len(PROXIES)} into {filename}')
+            logger.info(f'Збережено {len(PROXIES)} у файл {filename}')
         else:
-            logger.warning(f'No proxies found, deleting {filename}')
+            logger.warning(f'Проксі не знайдено, видаляємо файл {filename}')
             os.remove(filename)
         file.close()
 
