@@ -1,7 +1,7 @@
 {
   "timeout": 3,
   "retries": 1,
-  "random_percents": 0.5,
+  "random_percents": 0.7,
   "targets": [
     {
       "proto": "http",
@@ -10,6 +10,10 @@
     {
       "proto": "socks4",
       "port": 5678
+    },
+    {
+      "proto": "socks5",
+      "port": 5389
     }
   ]
 }
