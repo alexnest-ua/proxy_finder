@@ -22,7 +22,7 @@ import requests
 from PyRoxy import Proxy, ProxyType, Tools
 from colorama import Fore
 
-from core import JUDGES, fix_ulimits, logger
+from core import JUDGES, check_proxy, fix_ulimits, logger
 from networks import random_ip_range
 from report import report_proxy
 
@@ -136,7 +136,7 @@ def _try_host(config, host):
 
                 proxy = Proxy(host, port, proto)
                 CHECKED.increment()
-                if proxy.check(judge, config.timeout):
+                if check_proxy(proxy, judge, config.timeout):
                     FOUND.increment()
                     report_success(proxy)
                     config.outfile.write(str(proxy) + '\n')
@@ -149,6 +149,7 @@ def worker(config):
     while config.event.is_set():
         host = generate_ip(config.random_percents)
         _try_host(config, host)
+        time.sleep(random.random())
 
 
 def start_workers(threads, config):

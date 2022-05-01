@@ -9,12 +9,12 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from PyRoxy import ProxyUtiles
 
-from core import JUDGES, fix_ulimits, logger
+from core import JUDGES, check_proxy, fix_ulimits, logger
 
 
-def check_proxy(proxy, judges, timeout):
+def _check_proxy(proxy, judges, timeout):
     for judge in judges:
-        if proxy.check(judge, timeout):
+        if check_proxy(proxy, judge, timeout):
             return True
     return False
 
@@ -29,7 +29,7 @@ def check_proxies(proxies, threads, timeout, retries):
     with ThreadPoolExecutor(threads) as executor:
         for proxy in proxies:
             judges = random.sample(JUDGES, retries)
-            future = executor.submit(check_proxy, proxy, judges, timeout)
+            future = executor.submit(_check_proxy, proxy, judges, timeout)
             future_to_proxy[future] = proxy
 
         percent = len(future_to_proxy) // 100
