@@ -8,7 +8,6 @@ import json
 import os
 import random
 import time
-from ipaddress import IPv4Address
 from threading import Thread
 
 from aiohttp import ClientSession
@@ -17,7 +16,7 @@ from colorama import Fore
 from python_socks import ProxyType
 
 from core import JUDGES, Proxy, THREADS_LIMIT, check_proxy, fix_ulimits, logger
-from networks import random_ip_range
+from networks import get_random_ip
 from report import report_proxy
 
 
@@ -64,8 +63,7 @@ async def load_config(timeout, retries) -> dict:
             'targets': [
                 (target['port'], ProxyType[target['proto'].upper()])
                 for target in data['targets']
-            ],
-            'random_percents': data['random_percents']
+            ]
         }
 
 
@@ -77,17 +75,6 @@ async def report_success(proxy):
         logger.warning(
             f'{cl.RED}На жаль, проксі {proxy} не надіслане - зверніться до адміністратора @ddosseparbot{cl.RESET}'
         )
-
-
-def generate_ip(random_percents) -> str:
-    if random.random() < random_percents:
-        ip_from, ip_to = 1, 0xffffffff
-    else:
-        ip_from, ip_to = random_ip_range()
-
-    return IPv4Address._string_from_ip_int(
-        random.randint(ip_from, ip_to)
-    )
 
 
 CHECKED = FOUND = 0
@@ -110,7 +97,7 @@ async def try_host(config, host):
 
 async def worker(config):
     while True:
-        host = generate_ip(config['random_percents'])
+        host = get_random_ip()
         await try_host(config, host)
         await asyncio.sleep(random.random())
 

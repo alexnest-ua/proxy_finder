@@ -1,7 +1,7 @@
 {
   "timeout": 5,
   "retries": 1,
-  "random_percents": 0.85,
+  "random_percents": 1,
   "targets": [
     {
       "proto": "http",
