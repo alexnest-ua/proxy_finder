@@ -4,7 +4,7 @@ import socket
 from contextlib import suppress
 
 import async_timeout
-from python_socks.async_.asyncio.v2 import Proxy
+from python_socks.async_.asyncio import Proxy
 from yarl import URL
 
 
@@ -49,8 +49,7 @@ def fix_ulimits():
         resource.setrlimit(resource.RLIMIT_NOFILE, (hard, hard))
 
 
-async def check_proxy(proxy, judge, timeout):
-    url, expected, ip = judge
+async def _make_request(proxy, url, expected, ip, timeout):
     request = (
         f"GET {url.path} HTTP/1.1\r\n"
         f"Host: {url.host}\r\n"
@@ -59,15 +58,17 @@ async def check_proxy(proxy, judge, timeout):
     ).encode()
 
     parser = HttpParser()
-    body = b""
-    with suppress(Exception):
+    status, body = None, b""
+    writer = None
+    try:
+        sock = await proxy.connect(dest_host=ip, dest_port=url.port, timeout=timeout)
+        reader, writer = await asyncio.open_connection(host=None, port=None, sock=sock)
+
+        # Separate timeout for connect and read-write
         async with async_timeout.timeout(timeout):
-            sock = await proxy.connect(dest_host=ip, dest_port=url.port, timeout=timeout)
-            reader, writer = await asyncio.open_connection(host=None, port=None, sock=sock)
             writer.write(request)
             await writer.drain()
             while True:
-                print('while True')
                 response = await reader.read(1024)
                 recved = len(response)
                 if recved == 0:
@@ -77,7 +78,7 @@ async def check_proxy(proxy, judge, timeout):
                 if nparsed != recved:
                     return False
 
-                if parser.is_headers_complete():
+                if status is None and parser.is_headers_complete():
                     status = parser.get_status_code()
                     if status != 200:
                         return False
@@ -85,12 +86,19 @@ async def check_proxy(proxy, judge, timeout):
                 if parser.is_partial_body():
                     body += parser.recv_body()
                     if len(body) >= 256:
-                        if expected in body.decode():
-                            return True
-                        else:
-                            return False
+                        return expected in body.decode()
 
                 if parser.is_message_complete():
                     return False
+    finally:
+        if writer:
+            with suppress(Exception):
+                writer.close()
+                await writer.wait_closed()
 
+
+async def check_proxy(proxy, judge, timeout):
+    url, expected, ip = judge
+    with suppress(Exception):
+        return await _make_request(proxy, url, expected, ip, timeout)
     return False
