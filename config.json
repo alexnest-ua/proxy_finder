@@ -1,5 +1,5 @@
 {
-  "timeout": 3,
+  "timeout": 5,
   "retries": 1,
   "random_percents": 0.85,
   "targets": [

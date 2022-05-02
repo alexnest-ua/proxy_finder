@@ -1,16 +1,32 @@
+import asyncio
 import logging
 import socket
 from contextlib import suppress
 
-from http_parser.http import HttpStream
-from http_parser.reader import SocketReader
-from python_socks.sync.v2 import Proxy as PySocksProxy
+import async_timeout
+from python_socks.async_.asyncio.v2 import Proxy
 from yarl import URL
 
+
+try:
+    from http_parser.parser import HttpParser
+except ImportError:
+    from http_parser.pyparser import HttpParser
 
 logging.basicConfig(format='[%(asctime)s - %(levelname)s] %(message)s', datefmt="%H:%M:%S")
 logger = logging.getLogger('proxy_checker')
 logger.setLevel('INFO')
+
+__all__ = [
+    'Proxy',
+    'logger',
+    'JUDGES',
+    'fix_ulimits',
+    'check_proxy',
+    'THREADS_LIMIT',
+]
+
+THREADS_LIMIT = 15000
 
 JUDGES = [
     (URL('http://wfuchs.de/azenv.php'), 'AZ Environment', socket.gethostbyname('wfuchs.de')),
@@ -30,13 +46,10 @@ def fix_ulimits():
 
     soft, hard = resource.getrlimit(resource.RLIMIT_NOFILE)
     if soft < hard:
-        with suppress(Exception):
-            resource.setrlimit(resource.RLIMIT_NOFILE, (hard, hard))
-
-            resource.setrlimit(resource.RLIMIT_NOFILE, (hard, hard))
+        resource.setrlimit(resource.RLIMIT_NOFILE, (hard, hard))
 
 
-def check_proxy(proxy, judge, timeout):
+async def check_proxy(proxy, judge, timeout):
     url, expected, ip = judge
     request = (
         f"GET {url.path} HTTP/1.1\r\n"
@@ -45,17 +58,39 @@ def check_proxy(proxy, judge, timeout):
         f"Accept: */*\r\n\r\n"
     ).encode()
 
-    py_proxy = PySocksProxy.from_url(str(proxy))
+    parser = HttpParser()
+    body = b""
     with suppress(Exception):
-        with py_proxy.connect(ip, url.port, timeout=timeout).socket as sock:
-            sock.sendall(request)
-            parser = HttpStream(SocketReader(sock))
-            status = parser.status_code()
-            if status != 200:
-                return False
+        async with async_timeout.timeout(timeout):
+            sock = await proxy.connect(dest_host=ip, dest_port=url.port, timeout=timeout)
+            reader, writer = await asyncio.open_connection(host=None, port=None, sock=sock)
+            writer.write(request)
+            await writer.drain()
+            while True:
+                print('while True')
+                response = await reader.read(1024)
+                recved = len(response)
+                if recved == 0:
+                    return False
 
-            response = parser.body_file(binary=False).read(256)
-            if expected in response:
-                return True
+                nparsed = parser.execute(response, recved)
+                if nparsed != recved:
+                    return False
+
+                if parser.is_headers_complete():
+                    status = parser.get_status_code()
+                    if status != 200:
+                        return False
+
+                if parser.is_partial_body():
+                    body += parser.recv_body()
+                    if len(body) >= 256:
+                        if expected in body.decode():
+                            return True
+                        else:
+                            return False
+
+                if parser.is_message_complete():
+                    return False
 
     return False
