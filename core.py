@@ -59,13 +59,11 @@ async def _make_request(proxy, url, expected, ip, timeout):
 
     parser = HttpParser()
     status, body = None, b""
-    writer = None
-    try:
-        sock = await proxy.connect(dest_host=ip, dest_port=url.port, timeout=timeout)
+    sock = await proxy.connect(dest_host=ip, dest_port=url.port, timeout=timeout)
+    # Separate timeout for connect and read-write
+    async with async_timeout.timeout(timeout):
         reader, writer = await asyncio.open_connection(host=None, port=None, sock=sock)
-
-        # Separate timeout for connect and read-write
-        async with async_timeout.timeout(timeout):
+        try:
             writer.write(request)
             await writer.drain()
             while True:
@@ -90,9 +88,8 @@ async def _make_request(proxy, url, expected, ip, timeout):
 
                 if parser.is_message_complete():
                     return False
-    finally:
-        if writer:
-            with suppress(Exception):
+        finally:
+            if writer:
                 writer.close()
                 await writer.wait_closed()
 
