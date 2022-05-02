@@ -26,7 +26,7 @@ __all__ = [
     'THREADS_LIMIT',
 ]
 
-THREADS_LIMIT = 15000
+THREADS_LIMIT = 20000
 
 JUDGES = [
     (URL('http://wfuchs.de/azenv.php'), 'AZ Environment', socket.gethostbyname('wfuchs.de')),
