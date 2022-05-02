@@ -69,7 +69,7 @@ async def load_config(timeout) -> dict:
 async def report_success(proxy):
     result = await report_proxy(proxy)
     if result:
-        logger.info(f'{cl.GREEN}Проксі {proxy} надіслано, дякуємо!{cl.RESET}')
+        logger.info(f'{cl.GREEN}Проксі {str(proxy)} надіслано, дякуємо!{cl.RESET}')
     else:
         logger.warning(
             f'{cl.RED}На жаль, проксі {proxy} не надіслане - зверніться до адміністратора @ddosseparbot{cl.RESET}'
@@ -87,8 +87,9 @@ async def try_host(config, host):
     try:
         if await check_proxy(proxy, judge, config['timeout']):
             FOUND += 1
-            asyncio.create_task(report_success(proxy))
-            config['outfile'].write(str(proxy) + '\n')
+            proxy_str = f'{proxy_type.name.lower()}://{host}:{port}'
+            asyncio.create_task(report_success(proxy_str))
+            config['outfile'].write(proxy_str + '\n')
             return
     finally:
         CHECKED += 1
