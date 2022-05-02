@@ -53,13 +53,12 @@ class cl:
     RESET = Fore.RESET
 
 
-async def load_config(timeout, retries) -> dict:
+async def load_config(timeout) -> dict:
     response = await fetch(CONFIG_URL)
     if response:
         data = json.loads(response)
         return {
             'timeout': timeout or data['timeout'],
-            'retries': retries or data['retries'],
             'targets': [
                 (target['port'], ProxyType[target['proto'].upper()])
                 for target in data['targets']
@@ -82,17 +81,17 @@ CHECKED = FOUND = 0
 
 async def try_host(config, host):
     global CHECKED, FOUND
-    for judge in random.sample(JUDGES, config['retries']):
-        for port, proxy_type in config['targets']:
-            proxy = Proxy.create(proxy_type, host, port)
-            try:
-                if await check_proxy(proxy, judge, config['timeout']):
-                    FOUND += 1
-                    asyncio.create_task(report_success(proxy))
-                    config['outfile'].write(str(proxy) + '\n')
-                    return
-            finally:
-                CHECKED += 1
+    judge = random.choice(JUDGES)
+    port, proxy_type = random.choice(config['targets'])
+    proxy = Proxy.create(proxy_type, host, port)
+    try:
+        if await check_proxy(proxy, judge, config['timeout']):
+            FOUND += 1
+            asyncio.create_task(report_success(proxy))
+            config['outfile'].write(str(proxy) + '\n')
+            return
+    finally:
+        CHECKED += 1
 
 
 async def worker(config):
@@ -117,11 +116,11 @@ async def statistic(file):
         await asyncio.sleep(period)
 
 
-async def reload_config(config, timeout, retries):
+async def reload_config(config, timeout):
     period = 300
     while True:
         await asyncio.sleep(period)
-        new_config = await load_config(timeout, retries)
+        new_config = await load_config(timeout)
         if new_config:
             logger.info(f'{cl.YELLOW}Перевірено: {cl.BLUE}{CHECKED}{cl.YELLOW} | Знайдено: {cl.BLUE}{FOUND}{cl.RESET}')
             config.update(new_config)
@@ -131,7 +130,6 @@ async def main(outfile):
     parser = argparse.ArgumentParser()
     parser.add_argument('--threads', type=int, default=THREADS_LIMIT // 2)
     parser.add_argument('--timeout', type=int, default=None)
-    parser.add_argument('--retries', type=int, default=None)
     args = parser.parse_args()
 
     threads = args.threads
@@ -142,14 +140,14 @@ async def main(outfile):
     if not await is_latest_version():
         logger.warning(f'{cl.RED}Запущена не остання версія - рекоменовано оновитися{cl.RESET}')
 
-    config = await load_config(args.timeout, args.retries)
+    config = await load_config(args.timeout)
     if not config:
         logger.error(f'{cl.RED}Не вдалося завантажити налаштування - перевірте мережу!{cl.RESET}')
         exit()
 
     config['outfile'] = outfile
     tasks = [
-        asyncio.create_task(reload_config(config, args.timeout, args.retries)),
+        asyncio.create_task(reload_config(config, args.timeout)),
         asyncio.create_task(statistic(outfile)),
         *start_workers(threads, config)
     ]
