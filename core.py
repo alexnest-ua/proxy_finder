@@ -94,8 +94,8 @@ async def _make_request(proxy, url, expected, ip, timeout):
                 await writer.wait_closed()
 
 
-async def check_proxy(proxy, judge, timeout, raise_exc=False):
+async def check_proxy(proxy, judge, timeout):
     url, expected, ip = judge
-    with (suppress() if raise_exc else suppress(Exception)):
+    with suppress(Exception):
         return await _make_request(proxy, url, expected, ip, timeout)
     return False

@@ -9,7 +9,6 @@ import os
 import random
 import time
 from threading import Thread
-from collections import Counter
 from aiohttp import ClientSession
 from aiohttp.client_exceptions import ClientError
 from colorama import Fore
@@ -77,7 +76,6 @@ async def report_success(proxy):
 
 
 CHECKED = FOUND = 0
-ERRORS = Counter()
 
 
 async def try_host(config, host):
@@ -86,17 +84,12 @@ async def try_host(config, host):
     port, proxy_type = random.choice(config['targets'])
     proxy = Proxy.create(proxy_type, host, port)
     try:
-        if await check_proxy(proxy, judge, config['timeout'], raise_exc=True):
+        if await check_proxy(proxy, judge, config['timeout']):
             FOUND += 1
             proxy_str = f'{proxy_type.name.lower()}://{host}:{port}'
             asyncio.create_task(report_success(proxy_str))
             config['outfile'].write(proxy_str + '\n')
             return
-    except Exception as exc:
-        if 'Proxy connection timed out' not in str(exc):
-            ERRORS[str(exc)] += 1
-        if any(err in str(exc) for err in ['Invalid proxy response', 'SOCKS4 proxy server sent invalid data']):
-            print(f'{proxy_type.name.lower()}://{host}:{port}')
     finally:
         CHECKED += 1
 
@@ -119,7 +112,6 @@ async def statistic(file):
     while True:
         period = 30
         logger.info(f'{cl.YELLOW}Перевірено: {cl.BLUE}{CHECKED}{cl.YELLOW} | Знайдено: {cl.BLUE}{FOUND}{cl.RESET}')
-        print(dict(ERRORS.most_common(10)))
         file.flush()
         await asyncio.sleep(period)
 
