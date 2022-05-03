@@ -1,6 +1,5 @@
 import argparse
 import asyncio
-import random
 import time
 
 from core import JUDGES, Proxy, THREADS_LIMIT, check_proxy, fix_ulimits, logger
