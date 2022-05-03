@@ -2,7 +2,7 @@ import argparse
 import asyncio
 import time
 
-from core import JUDGES, Proxy, THREADS_LIMIT, check_proxy, fix_ulimits, logger
+from core import JUDGES, Proxy, THREADS_LIMIT, check_proxy, fix_ulimits, logger, setup_event_loop
 
 
 working_proxies = set()
@@ -45,8 +45,6 @@ async def check_proxies(proxies, threads, timeout, retries):
 
 
 async def main():
-    fix_ulimits()
-
     parser = argparse.ArgumentParser()
     parser.add_argument('infile')
     parser.add_argument('outfile')
@@ -75,4 +73,6 @@ async def main():
 
 
 if __name__ == '__main__':
+    fix_ulimits()
+    setup_event_loop()
     asyncio.run(main())

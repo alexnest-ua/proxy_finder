@@ -16,7 +16,7 @@ from aiohttp.client_exceptions import ClientError
 from colorama import Fore
 from python_socks import ProxyType
 
-from core import JUDGES, Proxy, THREADS_LIMIT, check_proxy, fix_ulimits, logger
+from core import JUDGES, Proxy, THREADS_LIMIT, check_proxy, fix_ulimits, logger, setup_event_loop
 from networks import get_random_ip
 from report import report_proxy
 
@@ -156,6 +156,8 @@ async def main(outfile):
 
 def main_wrapper():
     fix_ulimits()
+    setup_event_loop()
+
     filename = f'proxy_{int(time.time())}.txt'
     logger.info(
         f'{cl.YELLOW}Proxy will be sent to the server '

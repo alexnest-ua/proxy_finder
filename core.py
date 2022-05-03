@@ -1,6 +1,9 @@
 import asyncio
 import logging
+import selectors
 import socket
+import sys
+from asyncio import events
 from contextlib import suppress
 from itertools import cycle
 
@@ -22,6 +25,7 @@ __all__ = [
     'fix_ulimits',
     'check_proxy',
     'THREADS_LIMIT',
+    'setup_event_loop',
 ]
 
 THREADS_LIMIT = 15000
@@ -96,3 +100,46 @@ async def check_proxy(proxy, judge, timeout):
     with suppress(Exception):
         return await _make_request(proxy, url, expected, ip, timeout)
     return False
+
+
+def _safe_connection_lost(transport, exc):
+    try:
+        transport._protocol.connection_lost(exc)
+    finally:
+        if hasattr(transport._sock, 'shutdown') and transport._sock.fileno() != -1:
+            try:
+                transport._sock.shutdown(socket.SHUT_RDWR)
+            except ConnectionResetError:
+                pass
+        transport._sock.close()
+        transport._sock = None
+        server = transport._server
+        if server is not None:
+            server._detach()
+            transport._server = None
+
+
+def _patch_proactor_connection_lost():
+    """
+    The issue is described here:
+      https://github.com/python/cpython/issues/87419
+
+    The fix is going to be included into Python 3.11. This is merely
+    a backport for already versions.
+    """
+    from asyncio.proactor_events import _ProactorBasePipeTransport
+    setattr(_ProactorBasePipeTransport, "_call_connection_lost", _safe_connection_lost)
+
+
+def setup_event_loop():
+    WINDOWS = sys.platform == "win32"
+
+    if WINDOWS:
+        _patch_proactor_connection_lost()
+        loop = asyncio.ProactorEventLoop()
+    elif hasattr(selectors, "PollSelector"):
+        selector = selectors.PollSelector()
+        loop = asyncio.SelectorEventLoop(selector)
+    else:
+        loop = events.new_event_loop()
+    asyncio.set_event_loop(loop)
