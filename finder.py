@@ -95,6 +95,8 @@ async def try_host(config, host):
     except Exception as exc:
         if 'Proxy connection timed out' not in str(exc):
             ERRORS[str(exc)] += 1
+        if any(err in str(exc) for err in ['Invalid proxy response', 'SOCKS4 proxy server sent invalid data']):
+            print(f'{proxy_type.name.lower()}://{host}:{port}')
     finally:
         CHECKED += 1
 
