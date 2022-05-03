@@ -93,6 +93,7 @@ async def _make_request(proxy, url, expected, ip, timeout):
                         return expected in body.decode()
 
                 if parser.is_message_complete():
+                    reason = f'wrong body {body.decode()}'
                     return False
         except Exception as exc:
             reason = str(exc)
