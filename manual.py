@@ -63,11 +63,16 @@ async def main():
         threads = THREADS_LIMIT
 
     with open(args.infile, 'r') as f:
-        proxies = set(map(Proxy.from_url, f.readlines()))
+        proxies = {
+            Proxy.from_url(line): line
+            for line in f.read().splitlines()
+            if line.split()
+        }
+
     working = await check_proxies(proxies, threads, args.timeout, args.retries)
     with open(args.outfile, 'w') as f:
         for proxy in working:
-            f.write(str(proxy) + '\n')
+            f.write(proxies[proxy] + '\n')
 
 
 if __name__ == '__main__':
