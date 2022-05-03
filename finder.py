@@ -1,5 +1,4 @@
 # @formatter:off
-from itertools import cycle
 try: import colorama; colorama.init()
 except: pass
 # @formatter:on
@@ -9,7 +8,9 @@ import json
 import os
 import random
 import time
+from itertools import cycle
 from threading import Thread
+
 from aiohttp import ClientSession
 from aiohttp.client_exceptions import ClientError
 from colorama import Fore
@@ -26,12 +27,13 @@ VERSION_URL = 'https://raw.githubusercontent.com/porthole-ascend-cinnamon/proxy_
 
 async def fetch(url: str):
     attempts = 3
-    async with ClientSession(raise_for_status=True) as session:
+    async with ClientSession() as session:
         for _ in range(attempts):
             try:
                 async with session.get(url, timeout=5) as response:
+                    response.raise_for_status()
                     return await response.text()
-            except ClientError:
+            except (ClientError, asyncio.TimeoutError):
                 pass
     return None
 
@@ -69,11 +71,9 @@ async def load_config(timeout) -> dict:
 async def report_success(proxy):
     result = await report_proxy(proxy)
     if result:
-        logger.info(f'{cl.GREEN}Проксі {str(proxy)} надіслано, дякуємо!{cl.RESET}')
+        logger.info(f'{cl.GREEN}Proxy {str(proxy)} sent, thanks!{cl.RESET}')
     else:
-        logger.warning(
-            f'{cl.RED}На жаль, проксі {proxy} не надіслане - зверніться до адміністратора @ddosseparbot{cl.RESET}'
-        )
+        logger.warning(f'{cl.RED}Proxy {proxy} could not be send - please contact admin @ddosseparbot{cl.RESET}')
 
 
 CHECKED = FOUND = 0
@@ -112,7 +112,7 @@ def start_workers(threads, config):
 async def statistic(file):
     while True:
         period = 30
-        logger.info(f'{cl.YELLOW}Перевірено: {cl.BLUE}{CHECKED}{cl.YELLOW} | Знайдено: {cl.BLUE}{FOUND}{cl.RESET}')
+        logger.info(f'{cl.YELLOW}Checked: {cl.BLUE}{CHECKED}{cl.YELLOW} | Found: {cl.BLUE}{FOUND}{cl.RESET}')
         file.flush()
         await asyncio.sleep(period)
 
@@ -123,7 +123,6 @@ async def reload_config(config, timeout):
         await asyncio.sleep(period)
         new_config = await load_config(timeout)
         if new_config:
-            logger.info(f'{cl.YELLOW}Перевірено: {cl.BLUE}{CHECKED}{cl.YELLOW} | Знайдено: {cl.BLUE}{FOUND}{cl.RESET}')
             config.update(new_config)
 
 
@@ -135,15 +134,15 @@ async def main(outfile):
 
     threads = args.threads
     if threads > THREADS_LIMIT:
-        logger.warning(f'{cl.MAGENTA}Обмеження {THREADS_LIMIT} потоків!{cl.RESET}')
+        logger.warning(f'{cl.MAGENTA}Limited at {THREADS_LIMIT} threads!{cl.RESET}')
         threads = THREADS_LIMIT
 
     if not await is_latest_version():
-        logger.warning(f'{cl.RED}Запущена не остання версія - рекоменовано оновитися{cl.RESET}')
+        logger.warning(f'{cl.RED}New version available - please update (git pull){cl.RESET}')
 
     config = await load_config(args.timeout)
     if not config:
-        logger.error(f'{cl.RED}Не вдалося завантажити налаштування - перевірте мережу!{cl.RESET}')
+        logger.error(f'{cl.RED}Could not load config - check your connection!{cl.RESET}')
         exit()
 
     config['outfile'] = outfile
@@ -159,8 +158,8 @@ def main_wrapper():
     fix_ulimits()
     filename = f'proxy_{int(time.time())}.txt'
     logger.info(
-        f'{cl.YELLOW}Проксі будуть автоматично відправлені на сервер, '
-        f'а також збережені у файл {cl.BLUE}{filename}{cl.RESET}'
+        f'{cl.YELLOW}Proxy will be sent to the server '
+        f'and saved into {cl.BLUE}{filename}{cl.RESET}'
     )
     outfile = open(filename, 'w')
     try:
@@ -168,13 +167,13 @@ def main_wrapper():
         while True:
             time.sleep(60)
     except KeyboardInterrupt:
-        logger.info(f'{cl.MAGENTA}Завершуємо роботу{cl.RESET}')
+        logger.info(f'{cl.MAGENTA}Exiting...{cl.RESET}')
     finally:
         outfile.close()
         if FOUND:
-            logger.info(f'{cl.YELLOW}Збережено {cl.BLUE}{FOUND}{cl.YELLOW} у файл {cl.BLUE}{filename}{cl.RESET}')
+            logger.info(f'{cl.YELLOW}Saved {cl.BLUE}{FOUND}{cl.YELLOW} proxies into {cl.BLUE}{filename}{cl.RESET}')
         else:
-            logger.warning(f'{cl.YELLOW}Проксі не знайдено, видаляємо файл {cl.BLUE}{filename}{cl.RESET}')
+            logger.warning(f'{cl.YELLOW}No proxies found, deleting {cl.BLUE}{filename}{cl.RESET}')
             os.remove(filename)
 
 
