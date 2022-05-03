@@ -2,6 +2,7 @@ import asyncio
 import logging
 import socket
 from contextlib import suppress
+from itertools import cycle
 
 import async_timeout
 from python_socks.async_.asyncio import Proxy
@@ -28,14 +29,14 @@ __all__ = [
 
 THREADS_LIMIT = 20000
 
-JUDGES = [
+JUDGES = cycle([
     (URL('http://wfuchs.de/azenv.php'), 'AZ Environment', socket.gethostbyname('wfuchs.de')),
     (URL('http://www.meow.org.uk/cgi-bin/env.pl'), 'webmaster@meow.org.uk', socket.gethostbyname('www.meow.org.uk')),
     (URL('http://mojeip.net.pl/asdfa/azenv.php'), 'AZ Environment', socket.gethostbyname('mojeip.net.pl')),
     (URL('http://azenv.net/'), 'PHP Proxy Judge', socket.gethostbyname('azenv.net')),
     (URL('http://httpheader.net/azenv.php'), 'AZ Environment', socket.gethostbyname('httpheader.net')),
     (URL('http://www.proxyjudge.info/azenv.php'), 'AZ Environment', socket.gethostbyname('www.proxyjudge.info')),
-]
+])
 
 
 def fix_ulimits():

@@ -20,7 +20,7 @@ async def _check_proxy(proxy, judges, timeout):
 async def checker(proxies, timeout, retries):
     global CHECKED
     for proxy in proxies:
-        judges = random.sample(JUDGES, retries)
+        judges = [next(JUDGES) for _ in range(retries)]
         if await _check_proxy(proxy, judges, timeout):
             working_proxies.add(proxy)
         CHECKED += 1

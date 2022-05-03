@@ -1,4 +1,5 @@
 # @formatter:off
+from itertools import cycle
 try: import colorama; colorama.init()
 except: pass
 # @formatter:on
@@ -58,10 +59,10 @@ async def load_config(timeout) -> dict:
         data = json.loads(response)
         return {
             'timeout': timeout or data['timeout'],
-            'targets': [
+            'targets': cycle([
                 (target['port'], ProxyType[target['proto'].upper()])
                 for target in data['targets']
-            ]
+            ])
         }
 
 
@@ -80,8 +81,8 @@ CHECKED = FOUND = 0
 
 async def try_host(config, host):
     global CHECKED, FOUND
-    judge = random.choice(JUDGES)
-    port, proxy_type = random.choice(config['targets'])
+    judge = next(JUDGES)
+    port, proxy_type = next(config['targets'])
     proxy = Proxy.create(proxy_type, host, port)
     try:
         if await check_proxy(proxy, judge, config['timeout']):
