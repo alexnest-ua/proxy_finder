@@ -63,7 +63,6 @@ async def _make_request(proxy, url, expected, ip, timeout):
     sock = await proxy.connect(dest_host=ip, dest_port=url.port, timeout=timeout)
     reader, writer = await asyncio.open_connection(host=None, port=None, sock=sock)
     # Separate timeout for connect and read-write
-    reason = None
     async with async_timeout.timeout(timeout):
         try:
             writer.write(request)
@@ -72,33 +71,25 @@ async def _make_request(proxy, url, expected, ip, timeout):
                 response = await reader.read(1024)
                 recved = len(response)
                 if recved == 0:
-                    reason = f'recved == 0, {body[:256]}'
                     return False
 
                 nparsed = parser.execute(response, recved)
                 if nparsed != recved:
-                    reason = f'nparsed != recved, {recved[:256]}, {body[:256]}'
                     return False
 
                 if status is None and parser.is_headers_complete():
                     status = parser.get_status_code()
                     if status != 200:
-                        reason = f'status != 200, {status}'
                         return False
 
                 if parser.is_partial_body():
                     body += parser.recv_body()
                     if len(body) >= 256:
-                        reason = f'wrong body {body[:256]}'
                         return expected in body.decode()
 
                 if parser.is_message_complete():
-                    reason = f'wrong body {body[:256]}'
                     return False
-        except Exception as exc:
-            reason = str(exc)[:256]
         finally:
-            print(reason, type(proxy), proxy.proxy_host, proxy.proxy_port)
             writer.close()
             await writer.wait_closed()
 
