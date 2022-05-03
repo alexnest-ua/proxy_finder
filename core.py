@@ -143,3 +143,4 @@ def setup_event_loop():
     else:
         loop = events.new_event_loop()
     asyncio.set_event_loop(loop)
+    return loop

@@ -156,7 +156,7 @@ async def main(outfile):
 
 def main_wrapper():
     fix_ulimits()
-    setup_event_loop()
+    loop = setup_event_loop()
 
     filename = f'proxy_{int(time.time())}.txt'
     logger.info(
@@ -165,7 +165,7 @@ def main_wrapper():
     )
     outfile = open(filename, 'w')
     try:
-        Thread(target=lambda: asyncio.run(main(outfile)), daemon=True).start()
+        Thread(target=lambda: loop.run_until_complete(main(outfile)), daemon=True).start()
         while True:
             time.sleep(60)
     except KeyboardInterrupt:

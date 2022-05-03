@@ -74,5 +74,5 @@ async def main():
 
 if __name__ == '__main__':
     fix_ulimits()
-    setup_event_loop()
-    asyncio.run(main())
+    loop = setup_event_loop()
+    loop.run_until_complete(main())
