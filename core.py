@@ -8,11 +8,8 @@ import async_timeout
 from python_socks.async_.asyncio import Proxy
 from yarl import URL
 
+from httpparser import HttpParser
 
-try:
-    from http_parser.parser import HttpParser
-except ImportError:
-    from http_parser.pyparser import HttpParser
 
 logging.basicConfig(format='[%(asctime)s - %(levelname)s] %(message)s', datefmt="%H:%M:%S")
 logger = logging.getLogger('proxy_checker')
