@@ -170,12 +170,12 @@ def main_wrapper():
     except KeyboardInterrupt:
         logger.info(f'{cl.MAGENTA}Завершуємо роботу{cl.RESET}')
     finally:
+        outfile.close()
         if FOUND:
             logger.info(f'{cl.YELLOW}Збережено {cl.BLUE}{FOUND}{cl.YELLOW} у файл {cl.BLUE}{filename}{cl.RESET}')
         else:
             logger.warning(f'{cl.YELLOW}Проксі не знайдено, видаляємо файл {cl.BLUE}{filename}{cl.RESET}')
             os.remove(filename)
-        outfile.close()
 
 
 if __name__ == '__main__':
