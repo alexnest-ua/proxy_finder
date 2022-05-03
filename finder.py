@@ -93,7 +93,8 @@ async def try_host(config, host):
             config['outfile'].write(proxy_str + '\n')
             return
     except Exception as exc:
-        ERRORS[str(exc)] += 1
+        if 'Proxy connection timed out' not in str(exc):
+            ERRORS[str(exc)] += 1
     finally:
         CHECKED += 1
 
@@ -116,7 +117,7 @@ async def statistic(file):
     while True:
         period = 30
         logger.info(f'{cl.YELLOW}Перевірено: {cl.BLUE}{CHECKED}{cl.YELLOW} | Знайдено: {cl.BLUE}{FOUND}{cl.RESET}')
-        print(dict(ERRORS.most_common(5)))
+        print(dict(ERRORS.most_common(10)))
         file.flush()
         await asyncio.sleep(period)
 
