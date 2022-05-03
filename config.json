@@ -8,8 +8,20 @@
       "port": 8080
     },
     {
+      "proto": "http",
+      "port": 999
+    },
+    {
       "proto": "socks4",
       "port": 5678
+    },
+    {
+      "proto": "socks4",
+      "port": 4153
+    },
+    {
+      "proto": "socks4",
+      "port": 4145
     },
     {
       "proto": "socks5",
