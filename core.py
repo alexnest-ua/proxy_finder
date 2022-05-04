@@ -8,7 +8,7 @@ from contextlib import suppress
 from itertools import cycle
 
 import async_timeout
-from python_socks.async_.asyncio import Proxy
+from python_socks.async_.asyncio import Proxy, Socks5Proxy
 from yarl import URL
 
 from httpparser import HttpParser
@@ -61,8 +61,7 @@ async def _make_request(proxy, url, expected, ip, timeout):
         f"Accept: */*\r\n\r\n"
     ).encode()
 
-    parser = HttpParser()
-    status, body = None, b""
+    status_line = b'HTTP/1.1 200'
     sock = await proxy.connect(dest_host=ip, dest_port=url.port, timeout=timeout)
     reader, writer = await asyncio.open_connection(host=None, port=None, sock=sock)
     # Separate timeout for connect and read-write
@@ -70,13 +69,26 @@ async def _make_request(proxy, url, expected, ip, timeout):
         try:
             writer.write(request)
             await writer.drain()
+
+            parser = HttpParser()
+            response, status, body = b'', None, b''
             while True:
-                response = await reader.read(1024)
-                recved = len(response)
-                if recved == 0:
+                data = await reader.read(1024)
+                if not data:
                     return False
 
-                nparsed = parser.execute(response, recved)
+                response += data
+
+                # Issue with variable length bind address in socks5 protocol
+                if isinstance(proxy, Socks5Proxy) and status is None and status_line in response:
+                    idx = response.index(status_line)
+                    if idx != 0 and idx <= 32:
+                        parser = HttpParser()
+                        response = response[idx:]
+                        data = response
+
+                recved = len(data)
+                nparsed = parser.execute(data, recved)
                 if nparsed != recved:
                     return False
 
@@ -85,9 +97,9 @@ async def _make_request(proxy, url, expected, ip, timeout):
                     if status != 200:
                         return False
 
-                if parser.is_partial_body():
+                if parser.is_partial_body() or parser.is_message_complete():
                     body += parser.recv_body()
-                    if len(body) >= 128:
+                    if len(body) >= 128 or parser.is_message_complete():
                         return expected in body
 
                 if parser.is_message_complete():
