@@ -39,7 +39,7 @@ async def check_proxies(proxies, threads, timeout, retries):
         asyncio.create_task(checker(proxies_iter, timeout, retries))
         for _ in range(threads)
     ]
-    await asyncio.gather(*tasks)
+    await asyncio.wait(tasks)
     logger.info(f'Found {len(working_proxies)} proxies in {round(time.time() - start)}s')
     return working_proxies
 

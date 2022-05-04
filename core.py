@@ -31,12 +31,14 @@ __all__ = [
 THREADS_LIMIT = 15000
 
 JUDGES = cycle([
-    (URL('http://wfuchs.de/azenv.php'), 'AZ Environment', socket.gethostbyname('wfuchs.de')),
-    (URL('http://www.meow.org.uk/cgi-bin/env.pl'), 'webmaster@meow.org.uk', socket.gethostbyname('www.meow.org.uk')),
-    (URL('http://mojeip.net.pl/asdfa/azenv.php'), 'AZ Environment', socket.gethostbyname('mojeip.net.pl')),
-    (URL('http://azenv.net/'), 'PHP Proxy Judge', socket.gethostbyname('azenv.net')),
-    (URL('http://httpheader.net/azenv.php'), 'AZ Environment', socket.gethostbyname('httpheader.net')),
-    (URL('http://www.proxyjudge.info/azenv.php'), 'AZ Environment', socket.gethostbyname('www.proxyjudge.info')),
+    (URL('http://wfuchs.de/azenv.php'), b'<title>AZ Environment', socket.gethostbyname('wfuchs.de')),
+    (URL('http://www.meow.org.uk/cgi-bin/env.pl'), b'<pre>CONTEXT_DOCUMENT_ROOT=/var/www/meow.org.uk/cgi-bin/',
+     socket.gethostbyname('www.meow.org.uk')),
+    (URL('http://mojeip.net.pl/asdfa/azenv.php'), b'<title>AZ Environment', socket.gethostbyname('mojeip.net.pl')),
+    (URL('http://azenv.net/'), b'<title>AZ Environment', socket.gethostbyname('azenv.net')),
+    (URL('http://httpheader.net/azenv.php'), b'<title>AZ Environment', socket.gethostbyname('httpheader.net')),
+    (URL('http://www.proxyjudge.info/azenv.php'), b'<title>AZ Environment',
+     socket.gethostbyname('www.proxyjudge.info')),
 ])
 
 
@@ -85,8 +87,8 @@ async def _make_request(proxy, url, expected, ip, timeout):
 
                 if parser.is_partial_body():
                     body += parser.recv_body()
-                    if len(body) >= 256:
-                        return expected in body.decode()
+                    if len(body) >= 128:
+                        return expected in body
 
                 if parser.is_message_complete():
                     return False

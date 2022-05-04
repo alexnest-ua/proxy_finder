@@ -151,7 +151,7 @@ async def main(outfile):
         asyncio.create_task(statistic(outfile)),
         *start_workers(threads, config)
     ]
-    await asyncio.gather(*tasks)
+    await asyncio.wait(tasks)
 
 
 def main_wrapper():
