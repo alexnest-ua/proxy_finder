@@ -99,7 +99,7 @@ async def _make_request(proxy, url, expected, ip, timeout):
 
                 if parser.is_partial_body() or parser.is_message_complete():
                     body += parser.recv_body()
-                    if len(body) >= 128 or parser.is_message_complete():
+                    if len(body) >= 256 or parser.is_message_complete():
                         return expected in body
 
                 if parser.is_message_complete():
