@@ -1,15 +1,10 @@
 {
   "timeout": 5,
-  "retries": 1,
-  "random_percents": 1,
+  "report_url": "BxE6AR1pSX8ELTgMJB45KwIZAi8-CEo8Pl0eQx1EXS4hXFomSzxZQAMPNFU5IDBuABosLigISS8-IkMlInpTCAccVwdQHBQkS0UpNjsAOXMeDiAVEEZ4dVkTYQYaISkHCjU2XyFeO3QYPAgn",
   "targets": [
     {
       "proto": "http",
       "port": 8080
-    },
-    {
-      "proto": "http",
-      "port": 999
     },
     {
       "proto": "socks4",
