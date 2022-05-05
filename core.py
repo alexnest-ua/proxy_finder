@@ -101,9 +101,6 @@ async def _make_request(proxy, url, expected, ip, timeout):
                     body += parser.recv_body()
                     if len(body) >= 256 or parser.is_message_complete():
                         return expected in body
-
-                if parser.is_message_complete():
-                    return False
         finally:
             writer.close()
             await writer.wait_closed()

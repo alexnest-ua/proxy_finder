@@ -61,6 +61,7 @@ async def load_config(timeout) -> dict:
         data = json.loads(response)
         return {
             'timeout': timeout or data['timeout'],
+            'report_url': data['report_url'],
             'targets': cycle([
                 (target['port'], ProxyType[target['proto'].upper()])
                 for target in data['targets']
@@ -68,8 +69,8 @@ async def load_config(timeout) -> dict:
         }
 
 
-async def report_success(proxy):
-    result = await report_proxy(proxy)
+async def report_success(report_url, proxy):
+    result = await report_proxy(report_url, proxy)
     if result:
         logger.info(f'{cl.GREEN}Proxy {str(proxy)} sent, thanks!{cl.RESET}')
     else:
@@ -88,7 +89,9 @@ async def try_host(config, host):
         if await check_proxy(proxy, judge, config['timeout']):
             FOUND += 1
             proxy_str = f'{proxy_type.name.lower()}://{host}:{port}'
-            asyncio.create_task(report_success(proxy_str))
+            asyncio.create_task(
+                report_success(config['report_url'], proxy_str)
+            )
             config['outfile'].write(proxy_str + '\n')
             return
     finally:
@@ -102,11 +105,13 @@ async def worker(config):
         await asyncio.sleep(random.random())
 
 
-def start_workers(threads, config):
-    return [
-        asyncio.create_task(worker(config))
-        for _ in range(threads)
-    ]
+async def start_workers(threads, config):
+    for _ in range(100):
+        for _ in range(threads // 100):
+            yield asyncio.create_task(
+                worker(config)
+            )
+        await asyncio.sleep(0.1)
 
 
 async def statistic(file):
@@ -147,10 +152,15 @@ async def main(outfile):
 
     config['outfile'] = outfile
     tasks = [
-        asyncio.create_task(reload_config(config, args.timeout)),
-        asyncio.create_task(statistic(outfile)),
-        *start_workers(threads, config)
+        asyncio.create_task(
+            reload_config(config, args.timeout)
+        ),
+        asyncio.create_task(
+            statistic(outfile)
+        )
     ]
+    async for task in start_workers(threads, config):
+        tasks.append(task)
     await asyncio.wait(tasks)
 
 
