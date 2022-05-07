@@ -133,7 +133,7 @@ async def reload_config(config, timeout):
 
 async def main(outfile):
     parser = argparse.ArgumentParser()
-    parser.add_argument('--threads', type=int, default=THREADS_LIMIT // 2)
+    parser.add_argument('--threads', type=int, default=THREADS_LIMIT // 3)
     parser.add_argument('--timeout', type=int, default=None)
     args = parser.parse_args()
 
