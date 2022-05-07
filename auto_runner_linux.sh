@@ -1,5 +1,5 @@
 #Just in case kill previous copy of proxy_finder
-echo -e "[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - Killing all old processes with finder"
+echo -e "[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - Killing all old processes with finder..."
 sleep 5s
 sudo pkill -e -f finder
 echo -e "\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[0;35mAll old processes with finder killed\033[0;0m\n"
@@ -54,12 +54,12 @@ do
 		echo -e "[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - Running up to date proxy_finder"
 	else
 		echo -e "[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - Running updated proxy_finder"
-		bash auto_runner_linux.sh --threads $threads& # run new downloaded script 
+		bash auto_runner_linux.sh $threads& # run new downloaded script 
 		return 0 #terminate old script
 	fi
   
   #run script
-  python3 finder.py $threads
+  python3 finder.py --threads $threads
 	
   echo -e "\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[1;35mFinder is up and Running, next restart will be in $restart_interval...\033[1;0m"
   sleep $restart_interval
