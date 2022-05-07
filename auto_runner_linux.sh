@@ -74,4 +74,5 @@ do
   	echo -e "\n\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[36mSleeping $no_ddos_sleep without finder to let your computer cool down...\033[0m\n"
   	sleep $no_ddos_sleep
   	echo -e "\n\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[42mRESTARTING\033[0m\n\n"
+	#test
 done
