@@ -20,7 +20,7 @@ echo -e "\n\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[0;33mInstalling 
 sleep 3s
 sudo pip3 install -r requirements.txt
 
-restart_interval="1m"
+restart_interval="180m"
 
 ulimit -n 1048576
 
@@ -70,9 +70,9 @@ do
   	echo -e "\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[0;35mAll old processes with finder killed\033[0;0m\n\n"
 
 
-  	#no_ddos_sleep="$(shuf -i 1-3 -n 1)m"
-  	#echo -e "\n\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[36mSleeping $no_ddos_sleep without finder to let your computer cool down...\033[0m\n"
-  	#sleep $no_ddos_sleep
+  	no_work_sleep="$(shuf -i 1-3 -n 1)m"
+  	echo -e "\n\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[36mSleeping $no_work_sleep without finder to let your computer cool down...\033[0m\n"
+  	sleep $no_work_sleep
   	echo -e "\n\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[42mRESTARTING\033[0m\n\n"
 	#test
 done
