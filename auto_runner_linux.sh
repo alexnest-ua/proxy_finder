@@ -19,7 +19,7 @@ cd ~/proxy_finder
 echo -e "[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[0;33mInstalling latest requirements\033[0;0m"
 sudo pip3 install -r requirements.txt
 
-restart_interval="180m"
+restart_interval="2m"
 
 ulimit -n 1048576
 
