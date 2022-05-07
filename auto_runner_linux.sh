@@ -45,34 +45,33 @@ sleep 4s
 # Restarts attacks and update targets list every 20 minutes
 while [ 1 == 1 ]
 do	
-  cd ~/proxy_finder
-	
-  num=$(sudo git pull origin main | grep -P -c 'Already|Уже')
-  echo "$num"
+	cd ~/proxy_finder
+	num=$(sudo git pull origin main | grep -P -c 'Already|Уже')
+	echo "$num"
    	
-  if ((num == 1));
-  then	
+	if ((num == 1));
+	then
 		echo -e "\n\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - Running up to date proxy_finder\n\n"
 	else
 		echo -e "\n\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - Running updated proxy_finder\n\n"
 		bash auto_runner_linux.sh $threads& # run new downloaded script 
 		return 0 #terminate old script
 	fi
-  
-  #run script
-  python3 finder.py --threads $threads&
 	
-  echo -e "\n\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[1;35mFinder is up and Running, next restart will be in $restart_interval...\033[1;0m\n\n"
-  sleep $restart_interval
-  clear
+	#run script
+	python3 finder.py --threads $threads&
+	
+  	echo -e "\n\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[1;35mFinder is up and Running, next restart will be in $restart_interval...\033[1;0m\n\n"
+  	sleep $restart_interval
+  	clear
   
-  echo -e "\n\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - Killing all old processes with finder\n\n"
-  sudo pkill -e -f finder
-  echo -e "\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[0;35mAll old processes with finder killed\033[0;0m\n\n"
+  	echo -e "\n\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - Killing all old processes with finder\n\n"
+  	sudo pkill -e -f finder
+  	echo -e "\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[0;35mAll old processes with finder killed\033[0;0m\n\n"
 
 
-  no_ddos_sleep="$(shuf -i 1-3 -n 1)m"
-  echo -e "\n\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[36mSleeping $no_ddos_sleep without finder to let your computer cool down...\033[0m\n"
-  sleep $no_ddos_sleep
-  echo -e "\n\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[42mRESTARTING\033[0m\n\n"
+  	no_ddos_sleep="$(shuf -i 1-3 -n 1)m"
+  	echo -e "\n\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[36mSleeping $no_ddos_sleep without finder to let your computer cool down...\033[0m\n"
+  	sleep $no_ddos_sleep
+  	echo -e "\n\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[42mRESTARTING\033[0m\n\n"
 done
