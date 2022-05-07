@@ -126,9 +126,12 @@ async def reload_config(config, timeout):
     period = 300
     while True:
         await asyncio.sleep(period)
-        new_config = await load_config(timeout)
-        if new_config:
-            config.update(new_config)
+        try:
+            new_config = await load_config(timeout)
+            if new_config:
+                config.update(new_config)
+        except Exception as exc:
+            logger.warning(f'Error while updating config: {repr(exc)}')
 
 
 async def main(outfile):
