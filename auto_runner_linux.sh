@@ -20,7 +20,7 @@ echo -e "\n\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[0;33mInstalling 
 sleep 3s
 sudo pip3 install -r requirements.txt
 
-restart_interval="2m"
+restart_interval="1m"
 
 ulimit -n 1048576
 
