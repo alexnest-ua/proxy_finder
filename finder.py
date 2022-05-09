@@ -117,7 +117,7 @@ async def start_workers(threads, config):
 async def statistic(file):
     while True:
         period = 30
-        logger.info(f'{cl.YELLOW}Checked: {cl.BLUE}{CHECKED}{cl.YELLOW} | Found: {cl.BLUE}{FOUND}{cl.RESET}')
+        logger.info(f'{cl.YELLOW}Checked proxies: {cl.BLUE}{CHECKED}{cl.YELLOW} | Found proxies: {cl.BLUE}{FOUND}{cl.RESET}')
         file.flush()
         await asyncio.sleep(period)
 
