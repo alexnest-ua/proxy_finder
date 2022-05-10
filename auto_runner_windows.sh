@@ -50,7 +50,7 @@ do
 		echo -e "\n\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - Running up to date proxy_finder\n\n"
 	else
 		echo -e "\n\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - Running updated proxy_finder\n\n"
-		bash auto_runner_linux.sh $threads # run new downloaded script 
+		bash auto_runner_windows.sh $threads # run new downloaded script 
 		return 0 #terminate old script
 	fi
 	
