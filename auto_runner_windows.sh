@@ -22,8 +22,6 @@ restart_interval="180m"
 
 ulimit -n 1048576
 
-sudo git config --global --add safe.directory /home/${USER}/proxy_finder
-
 threads="${1:-5000}"
 if ((threads < 2000));
 then
