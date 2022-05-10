@@ -170,7 +170,7 @@ def main_wrapper():
 
     filename = f'proxy_{int(time.time())}.txt'
     logger.info(
-        f'{cl.YELLOW}Proxy will be sent to the server '
+        f'{cl.YELLOW}Proxy will be sent to the mhddos_proxy server '
         f'and saved into {cl.BLUE}{filename}{cl.RESET}'
     )
     outfile = open(filename, 'w')
