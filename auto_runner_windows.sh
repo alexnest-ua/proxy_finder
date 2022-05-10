@@ -7,21 +7,16 @@ taskkill -f -im python3.9.exe
 taskkill -f -im python3.10.exe
 echo -e "\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[0;35mAll old processes with finder killed\033[0;0m\n"
 
-echo -e "[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[0;33mInstalling latest packages needed...\033[0;0m"
-sleep 3s
-sudo apt update -y
-# Install git, python3, etc
-sudo apt install --upgrade git python3 python3-pip -y
-sudo -H pip3 install --upgrade pip
 ulimit -n 1048576
 
 #Install latest version of proxy_finder
 cd ~
+rm -rf proxy_finder
 git clone https://github.com/alexnest-ua/proxy_finder
 cd ~/proxy_finder
 echo -e "\n\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[0;33mInstalling latest requirements...\033[0;0m\n\n"
 sleep 3s
-sudo pip3 install -r requirements.txt
+python -m pip install -r requirements.txt
 
 restart_interval="180m"
 
@@ -70,9 +65,9 @@ do
   
   	echo -e "\n\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - Killing all old processes with finder\n\n"
   	taskkill -f -im python.exe
-taskkill -f -im python3.8.exe
-taskkill -f -im python3.9.exe
-taskkill -f -im python3.10.exe
+	taskkill -f -im python3.8.exe
+	taskkill -f -im python3.9.exe
+	taskkill -f -im python3.10.exe
   	echo -e "\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[0;35mAll old processes with finder killed\033[0;0m\n\n"
 
 
