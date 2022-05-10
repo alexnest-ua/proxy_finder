@@ -87,6 +87,10 @@ async def _make_request(proxy, url, expected, ip, timeout):
                         response = response[idx:]
                         data = response
 
+                # Fast-fail route
+                if status is None and len(response) >= len(status_line) and not response.startswith(status_line):
+                    return False
+
                 recved = len(data)
                 nparsed = parser.execute(data, recved)
                 if nparsed != recved:
@@ -97,10 +101,10 @@ async def _make_request(proxy, url, expected, ip, timeout):
                     if status != 200:
                         return False
 
-                if parser.is_partial_body() or parser.is_message_complete():
-                    body += parser.recv_body()
-                    if len(body) >= 256 or parser.is_message_complete():
-                        return expected in body
+                body += parser.recv_body()
+                if len(response) >= 512 or len(body) >= 256 or parser.is_message_complete():
+                    return expected in body
+
         finally:
             writer.close()
             await writer.wait_closed()
