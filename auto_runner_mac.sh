@@ -43,7 +43,7 @@ restart_interval="10800"
 ulimit -n 1048576
 
 
-threads="${1:-5000}"
+threads="${1:-2500}"
 if ((threads < 2000));
 then
 	echo -e "\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[0;33m$threads is too LOW amount of threads - finder will be started with 2000 async threads\033[0;0m\n"
