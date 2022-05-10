@@ -11,7 +11,7 @@ import time
 from itertools import cycle
 from threading import Thread
 
-from aiohttp import ClientSession
+from aiohttp import ClientSession, TCPConnector
 from aiohttp.client_exceptions import ClientError
 from colorama import Fore
 from python_socks import ProxyType
@@ -27,7 +27,7 @@ VERSION_URL = 'https://raw.githubusercontent.com/porthole-ascend-cinnamon/proxy_
 
 async def fetch(url: str):
     attempts = 3
-    async with ClientSession() as session:
+    async with ClientSession(connector=TCPConnector(ssl=False)) as session:
         for _ in range(attempts):
             try:
                 async with session.get(url, timeout=5) as response:
