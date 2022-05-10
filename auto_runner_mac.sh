@@ -23,6 +23,7 @@ fi
 
 # Install git, python3, etc
 brew install coreutils git python@3.10
+brew link --overwrite python@3.10
 python3.10 -m pip install --upgrade pip
 
 ulimit -n 1048576
