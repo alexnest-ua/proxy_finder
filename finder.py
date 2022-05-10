@@ -40,6 +40,10 @@ async def fetch(url: str):
 
 async def is_latest_version():
     resp = await fetch(VERSION_URL)
+    if not resp:
+        logger.warning('New version check failed')
+        return True
+
     latest = int(resp.strip())
     with open('version.txt', 'r') as f:
         current = int(f.read().strip())
@@ -55,18 +59,21 @@ class cl:
     RESET = Fore.RESET
 
 
-async def load_config(timeout) -> dict:
+async def load_config(timeout):
     response = await fetch(CONFIG_URL)
-    if response:
-        data = json.loads(response)
-        return {
-            'timeout': timeout or data['timeout'],
-            'report_url': data['report_url'],
-            'targets': cycle([
-                (target['port'], ProxyType[target['proto'].upper()])
-                for target in data['targets']
-            ])
-        }
+    if not response:
+        logger.warning('Config reload failed')
+        return
+
+    data = json.loads(response)
+    return {
+        'timeout': timeout or data['timeout'],
+        'report_url': data['report_url'],
+        'targets': cycle([
+            (target['port'], ProxyType[target['proto'].upper()])
+            for target in data['targets']
+        ])
+    }
 
 
 async def report_success(report_url, proxy):
