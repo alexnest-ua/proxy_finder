@@ -62,7 +62,7 @@ class cl:
 async def load_config(timeout):
     response = await fetch(CONFIG_URL)
     if not response:
-        logger.warning('Config reload failed')
+        logger.warning('Config was not updated')
         return
 
     data = json.loads(response)
