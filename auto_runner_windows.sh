@@ -38,7 +38,7 @@ sleep 4s
 while [ 1 == 1 ]
 do	
 	cd ~/proxy_finder
-	num=$(git pull origin main | grep -P -c 'Already|Уже')
+	num=$(git pull origin main | grep -E -c 'Already|Уже|Вже')
 	echo "$num"
    	
 	if ((num == 1));
