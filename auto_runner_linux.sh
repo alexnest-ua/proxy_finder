@@ -47,8 +47,8 @@ function ctrl_c() {
         echo "Exiting..."
 	sleep 3s
 	exit
-	echo "Exiting failed..."
-	sleep 5s
+	echo "Exiting failed - close the window with terminal!!!"
+	sleep 60s
 }
 # Restarts attacks and update targets list every 20 minutes
 while [ 1 == 1 ]
