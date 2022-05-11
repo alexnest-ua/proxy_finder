@@ -10,7 +10,7 @@ echo -e "\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[0;35mAll old proce
 echo -e "[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[0;33mInstalling latest packages needed...\033[0;0m"
 sleep 3
 
-num=$(brew --version | grep E -c "3.4|3.5" || true)
+num=$(brew --version | grep -E -c "3.4|3.5" || true)
 echo -e "$num"
 if ((num == 1));
 then	
