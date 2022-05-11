@@ -21,6 +21,6 @@ curl -LO https://raw.githubusercontent.com/porthole-ascend-cinnamon/proxy_finder
 
 
 ## 2. Спосіб все-в-одному - авто-оновлювані mhddos_proxy та proxy_finder в одному скрипті
-Пріоритетний скрипт для Linux-серверів:  
+Пріоритетний скрипт для Linux-серверів(якщо auto_mhddos_alexnest у вас вже був запущений - вам нічого оновлювати не треба, воно вже зробило все саме):  
 Цей https://github.com/alexnest-ua/auto_mhddos_alexnest скрипт дозволяє запустити декілька паралельних DDoS-атак через вбудований mhddos_proxy та має вже вбудований proxy_finder, який ще й автоматично оновлює не лише себе, а й mhddos_proxy та proxy_finder, та бере актуальні цілі звідси: https://t.me/ddos_separ  
 Тому можете тут https://github.com/alexnest-ua/auto_mhddos_alexnest обирати параметри під свій ПК - запускати атаку та пошук та йти займатися своїми справами, а скрипт зробить все за вас 
