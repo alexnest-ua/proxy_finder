@@ -11,12 +11,12 @@ https://auto-ddos.notion.site/VPN-effde85923534cf7b4caa198a0ef0d23
 
 Інші ВПН теж можуть не підійти, бо вони можуть відключатися 
 
-1. Встановлення Python3 (посилання)  
-2. Встановлення Git (посилання)  
-3. Запуск пошуку (посилання)  
-3.1 Запуск напряму через Термінал (посилання)  
-3.2 Запуск за допомогою авто-оновлюваного bash-скрипта, який сам завантажить усі необхідні файли, та самостійно буде завантажувати оновлення (посилання)  
-3.3 Найкращий спосіб все-в-одному - авто-оновлювані mhddos_proxy та proxy_finder в одному скрипті (посилання)  
+1. [**Встановлення Python3**](https://github.com/porthole-ascend-cinnamon/proxy_finder/blob/main/instructions/Windows.md#1-%D0%B2%D1%81%D1%82%D0%B0%D0%BD%D0%BE%D0%B2%D0%BB%D0%B5%D0%BD%D0%BD%D1%8F-python3)  
+2. [**Встановлення Git**](https://github.com/porthole-ascend-cinnamon/proxy_finder/blob/main/instructions/Windows.md#2-%D0%B2%D1%81%D1%82%D0%B0%D0%BD%D0%BE%D0%B2%D0%BB%D0%B5%D0%BD%D0%BD%D1%8F-git)  
+3. [**Запуск пошуку**](https://github.com/porthole-ascend-cinnamon/proxy_finder/blob/main/instructions/Windows.md#3-%D0%B7%D0%B0%D0%BF%D1%83%D1%81%D0%BA-%D0%BF%D0%BE%D1%88%D1%83%D0%BA%D1%83)  
+3.1 [**Запуск напряму через Термінал**](https://github.com/porthole-ascend-cinnamon/proxy_finder/blob/main/instructions/Windows.md#31-%D0%B7%D0%B0%D0%BF%D1%83%D1%81%D0%BA-%D0%BD%D0%B0%D0%BF%D1%80%D1%8F%D0%BC%D1%83-%D1%87%D0%B5%D1%80%D0%B5%D0%B7-%D1%82%D0%B5%D1%80%D0%BC%D1%96%D0%BD%D0%B0%D0%BB)  
+3.2 [**Запуск за допомогою авто-оновлюваного bash-скрипта, який сам завантажить усі необхідні файли, та самостійно буде завантажувати оновлення**](https://github.com/porthole-ascend-cinnamon/proxy_finder/blob/main/instructions/Windows.md#32-%D0%B7%D0%B0%D0%BF%D1%83%D1%81%D0%BA-%D0%B7%D0%B0-%D0%B4%D0%BE%D0%BF%D0%BE%D0%BC%D0%BE%D0%B3%D0%BE%D1%8E-%D0%B0%D0%B2%D1%82%D0%BE-%D0%BE%D0%BD%D0%BE%D0%B2%D0%BB%D1%8E%D0%B2%D0%B0%D0%BD%D0%BE%D0%B3%D0%BE-bash-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82%D0%B0-%D1%8F%D0%BA%D0%B8%D0%B9-%D1%81%D0%B0%D0%BC-%D0%B7%D0%B0%D0%B2%D0%B0%D0%BD%D1%82%D0%B0%D0%B6%D0%B8%D1%82%D1%8C-%D1%83%D1%81%D1%96-%D0%BD%D0%B5%D0%BE%D0%B1%D1%85%D1%96%D0%B4%D0%BD%D1%96-%D1%84%D0%B0%D0%B9%D0%BB%D0%B8-%D1%82%D0%B0-%D1%81%D0%B0%D0%BC%D0%BE%D1%81%D1%82%D1%96%D0%B9%D0%BD%D0%BE-%D0%B1%D1%83%D0%B4%D0%B5-%D0%B7%D0%B0%D0%B2%D0%B0%D0%BD%D1%82%D0%B0%D0%B6%D1%83%D0%B2%D0%B0%D1%82%D0%B8-%D0%BE%D0%BD%D0%BE%D0%B2%D0%BB%D0%B5%D0%BD%D0%BD%D1%8F)  
+3.3 [**Найкращий спосіб все-в-одному - авто-оновлювані mhddos_proxy та proxy_finder в одному скрипті**](https://github.com/porthole-ascend-cinnamon/proxy_finder/blob/main/instructions/Windows.md#33-%D0%BD%D0%B0%D0%B9%D0%BA%D1%80%D0%B0%D1%89%D0%B8%D0%B9-%D1%81%D0%BF%D0%BE%D1%81%D1%96%D0%B1-%D0%B2%D1%81%D0%B5-%D0%B2-%D0%BE%D0%B4%D0%BD%D0%BE%D0%BC%D1%83---%D0%B0%D0%B2%D1%82%D0%BE-%D0%BE%D0%BD%D0%BE%D0%B2%D0%BB%D1%8E%D0%B2%D0%B0%D0%BD%D1%96-mhddos_proxy-%D1%82%D0%B0-proxy_finder-%D0%B2-%D0%BE%D0%B4%D0%BD%D0%BE%D0%BC%D1%83-%D1%81%D0%BA%D1%80%D0%B8%D0%BF%D1%82%D1%96)  
 
 Якщо виникли будь-які проблеми на будь-якому етапі пишіть в телеграм: @brainqdead  
 
@@ -77,6 +77,7 @@ https://auto-ddos.notion.site/VPN-effde85923534cf7b4caa198a0ef0d23
 Встановлення завершено - натискаємо Finish  
 
 ## 3. Запуск пошуку
+Надалі після успішного встановлення Python3 та Git потрібно буде кожен день виконувати лише один з наступних пунктів:  
 ### 3.1 Запуск напряму через Термінал
 #### 3.1.1 Встановлення самої програми через Термінал(робимо лише один раз):
 Відкриваємо Мой компьютер / Этот компьютер:  
@@ -129,7 +130,7 @@ python finder.py --threads 10000
 або шукайте його на Робочому столі  
 та вводимо наступне:
 ```shell
-curl -LO https://raw.githubusercontent.com/alexnest-ua/proxy_finder/main/auto_runner_windows.sh && bash auto_runner_windows.sh 5000
+curl -LO https://raw.githubusercontent.com/porthole-ascend-cinnamon/proxy_finder/main/auto_runner_windows.sh && bash auto_runner_windows.sh 5000
 ```
 де 5000 можна замінити на будь-яке значення від 1 до 15000, але **ми рекомендуємо саме 5000, які стоять за замовчуванням**  
 
