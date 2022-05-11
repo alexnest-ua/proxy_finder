@@ -1,10 +1,7 @@
 #Just in case kill previous copy of proxy_finder
 echo -e "[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - Killing all old processes with finder..."
 sleep 3s
-taskkill -f -im python.exe
-taskkill -f -im python3.8.exe
-taskkill -f -im python3.9.exe
-taskkill -f -im python3.10.exe
+kill $PID
 echo -e "\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[0;35mAll old processes with finder killed\033[0;0m\n"
 
 ulimit -n 1048576
@@ -18,7 +15,7 @@ echo -e "\n\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[0;33mInstalling 
 sleep 3s
 python -m pip install -r requirements.txt
 
-restart_interval="180m"
+restart_interval="1m"
 
 ulimit -n 1048576
 
@@ -56,16 +53,14 @@ do
 	
 	#run script
 	python3 finder.py --threads $threads&
+	PID="$!"
 	
   	echo -e "\n\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[1;35mFinder is up and Running, next restart will be in $restart_interval...\033[1;0m\n\n"
   	sleep $restart_interval
   	clear
   
   	echo -e "\n\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - Killing all old processes with finder\n\n"
-  	taskkill -f -im python.exe
-	taskkill -f -im python3.8.exe
-	taskkill -f -im python3.9.exe
-	taskkill -f -im python3.10.exe
+  	kill $PID
   	echo -e "\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[0;35mAll old processes with finder killed\033[0;0m\n\n"
 
 
