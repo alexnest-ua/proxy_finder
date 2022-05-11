@@ -54,7 +54,7 @@ function ctrl_c() {
 while [ 1 == 1 ]
 do	
 	cd ~/proxy_finder
-	num=$(sudo git pull origin main | grep -P -c 'Already|Уже')
+	num=$(sudo git pull origin main | grep -E -c 'Already|Уже|Вже')
 	echo "$num"
    	
 	if ((num == 1));
