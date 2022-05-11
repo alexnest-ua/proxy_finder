@@ -7,6 +7,14 @@
       "port": 8080
     },
     {
+      "proto": "http",
+      "port": 999
+    },
+     {
+      "proto": "http",
+      "port": 3128
+    },
+    {
       "proto": "socks4",
       "port": 5678
     },
@@ -19,8 +27,24 @@
       "port": 4145
     },
     {
+      "proto": "socks4",
+      "port": 1080
+    },
+     {
+      "proto": "socks4",
+      "port": 8888
+    },
+    {
       "proto": "socks5",
       "port": 5389
+    },
+    {
+      "proto": "socks5",
+      "port": 1080
+    },
+     {
+      "proto": "socks5",
+      "port": 8888
     }
   ]
 }
