@@ -15,7 +15,7 @@ ulimit -n 1048576
 #Install latest version of proxy_finder
 cd ~
 sudo rm -rf proxy_finder
-git clone https://github.com/alexnest-ua/proxy_finder
+git clone https://github.com/porthole-ascend-cinnamon/proxy_finder
 cd ~/proxy_finder
 sleep 3s
 sudo pip3 install -r requirements.txt
