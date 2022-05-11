@@ -12,6 +12,7 @@ cd ~/proxy_finder
 echo -e "\n\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[0;33mInstalling latest requirements...\033[0;0m\n\n"
 sleep 3s
 python -m pip install -r requirements.txt
+echo -e "\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[1;32mFiles installed successfully\033[1;0m\n\n"
 
 restart_interval="90s"
 
