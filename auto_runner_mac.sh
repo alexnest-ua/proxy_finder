@@ -73,7 +73,7 @@ while [ 1 == 1 ]
 do	
   	cd ~/proxy_finder
 
-  	num=$(git pull origin main | grep -c 'Already')
+  	num=$(git pull origin main |  grep -E -c 'Already|Уже')
 	echo "$num"
    	
 	if ((num == 1));
