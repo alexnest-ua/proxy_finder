@@ -2,10 +2,10 @@
 
 set -e
 
-echo -e "[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - Killing all old processes with finder..."
+echo -e "[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - Killing all old processes with proxy_finder..."
 sleep 3
 pkill -f finder.py || true
-echo -e "\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[0;35mAll old processes with finder killed\033[0;0m\n"
+echo -e "\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[0;35mAll old processes with proxy_finder killed\033[0;0m\n"
 
 echo -e "[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[0;33mInstalling latest packages needed...\033[0;0m"
 sleep 3
@@ -55,7 +55,7 @@ then
 	threads=15000
 fi
 
-echo -e "\n\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[1;32mStarting finder with $threads threads...\033[1;0m\n\n"
+echo -e "\n\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[1;32mStarting proxy_finder with $threads threads...\033[1;0m\n\n"
 sleep 4
 
 trap 'echo signal received!; kill "${PID}"; wait "${PID}"' SIGINT SIGTERM
@@ -84,13 +84,13 @@ do
   	sleep $restart_interval
   	clear
   
-  	echo -e "\n\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - Killing all old processes with finder\n\n"
+  	echo -e "\n\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - Killing all old processes with proxy_finder\n\n"
   	pkill -f finder.py || true
-  	echo -e "\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[0;35mAll old processes with finder killed\033[0;0m\n\n"
+  	echo -e "\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[0;35mAll old processes with proxy_finder killed\033[0;0m\n\n"
 
 
   	no_work_sleep=`expr $(shuf -i 1-3 -n 1) \* 60`
-  	echo -e "\n\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[36mSleeping $no_work_sleep seconds without finder to let your computer cool down...\033[0m\n"
+  	echo -e "\n\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[36mSleeping $no_work_sleep seconds without proxy_finder to let your computer cool down...\033[0m\n"
   	sleep $no_work_sleep
   	echo -e "\n\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[42mRESTARTING\033[0m\n\n"
 	#test
