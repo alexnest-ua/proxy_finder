@@ -41,7 +41,7 @@ fi
 echo -e "\n\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[1;32mStarting proxy_finder with $threads threads...\033[1;0m\n\n"
 sleep 4s
 
-trap 'echo signal received!; sudo kill "${PID}"; sudo wait "${PID}"; ctrl_c' SIGINT SIGTERM
+trap 'echo signal received!; sudo kill "${PID}"; wait "${PID}"; ctrl_c' SIGINT SIGTERM
 
 function ctrl_c() {
         echo "Exiting..."
