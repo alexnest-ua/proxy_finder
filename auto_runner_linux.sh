@@ -14,6 +14,7 @@ ulimit -n 1048576
 
 #Install latest version of proxy_finder
 cd ~
+rm -r proxy_finder
 git clone https://github.com/alexnest-ua/proxy_finder
 cd ~/proxy_finder
 sleep 3s
