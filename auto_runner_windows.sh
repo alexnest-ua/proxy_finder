@@ -4,8 +4,6 @@ sleep 3s
 kill $PID
 echo -e "\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[0;35mAll old processes with finder killed\033[0;0m\n"
 
-ulimit -n 1048576
-
 #Install latest version of proxy_finder
 cd ~
 rm -rf proxy_finder
