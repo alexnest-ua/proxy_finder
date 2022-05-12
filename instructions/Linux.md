@@ -14,6 +14,7 @@ https://auto-ddos.notion.site/VPN-5e45e0aadccc449e83fea45d56385b54
 1) Запускаємо Термінал
 2) Запускаємо скрипт, який сам встановить необхідні програми: Brew, Python, Git, доп. засоби Баш'у (можливо попросить ввести пароль для установки та ще 10 Гб місця), та запустить mhddos_proxy та proxy_finder:  
 ```shell
+cd ~
 curl -LO https://raw.githubusercontent.com/porthole-ascend-cinnamon/proxy_finder/main/auto_runner_linux.sh && bash auto_runner_linux.sh 5000
 ```
 де 5000 можна замінити на будь-яке значення від 1 до 10000, але **ми рекомендуємо саме 2500, які стоять за замовчуванням**  
