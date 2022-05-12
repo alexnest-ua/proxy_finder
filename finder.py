@@ -43,6 +43,7 @@ async def is_latest_version():
     if not resp:
         logger.warning('New version check failed')
         return True
+
     latest = int(resp.strip())
     with open('version.txt', 'r') as f:
         current = int(f.read().strip())
@@ -61,7 +62,7 @@ class cl:
 async def load_config(timeout):
     response = await fetch(CONFIG_URL)
     if not response:
-        logger.warning('Config reload failed')
+        logger.warning('Config was not updated')
         return
 
     data = json.loads(response)
@@ -123,7 +124,9 @@ async def start_workers(threads, config):
 async def statistic(file):
     while True:
         period = 30
-        logger.info(f'{cl.YELLOW}Checked proxies: {cl.BLUE}{CHECKED}{cl.YELLOW} | Found proxies: {cl.BLUE}{FOUND}{cl.RESET}')
+        logger.info(
+            f'{cl.YELLOW}Checked proxies: {cl.BLUE}{CHECKED}{cl.YELLOW} | Found proxies: {cl.BLUE}{FOUND}{cl.RESET}'
+        )
         file.flush()
         await asyncio.sleep(period)
 
@@ -132,14 +135,17 @@ async def reload_config(config, timeout):
     period = 300
     while True:
         await asyncio.sleep(period)
-        new_config = await load_config(timeout)
-        if new_config:
-            config.update(new_config)
+        try:
+            new_config = await load_config(timeout)
+            if new_config:
+                config.update(new_config)
+        except Exception as exc:
+            logger.warning(f'Error while updating config: {repr(exc)}')
 
 
 async def main(outfile):
     parser = argparse.ArgumentParser()
-    parser.add_argument('--threads', type=int, default=THREADS_LIMIT // 2)
+    parser.add_argument('--threads', type=int, default=THREADS_LIMIT // 3)
     parser.add_argument('--timeout', type=int, default=None)
     args = parser.parse_args()
 

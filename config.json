@@ -1,10 +1,18 @@
 {
   "timeout": 5,
-  "report_url": "BxE6AR1pSX8ELTgMJB45KwIZAi8-CEo8Pl0eQx1EXS4hXFomSzxZQAMPNFU5IDBuABosLigISS8-IkMlInpTCAccVwdQHBQkS0UpNjsAOXMeDiAVEEZ4dVkTYQYaISkHCjU2XyFeO3QYPAgn",
+  "report_url": "BxE6AR1pSX8ELTgMJB45KwIZAi8+CEo8Pl0eQx1EXS4hXFomSzxZQAMPNFU5IDBuABosLigISS8+IjIJFWcHICAEdCEEeA4uS0UpNhEYPw0dHg8tEQIOSC0rYQYaITcxJgsHVWYINxcYIis/",
   "targets": [
     {
       "proto": "http",
       "port": 8080
+    },
+    {
+      "proto": "http",
+      "port": 999
+    },
+     {
+      "proto": "http",
+      "port": 3128
     },
     {
       "proto": "socks4",
@@ -19,8 +27,24 @@
       "port": 4145
     },
     {
+      "proto": "socks4",
+      "port": 1080
+    },
+     {
+      "proto": "socks4",
+      "port": 8888
+    },
+    {
       "proto": "socks5",
       "port": 5389
+    },
+    {
+      "proto": "socks5",
+      "port": 1080
+    },
+     {
+      "proto": "socks5",
+      "port": 8888
     }
   ]
 }
