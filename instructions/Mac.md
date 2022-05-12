@@ -22,6 +22,7 @@ https://auto-ddos.notion.site/VPN-5e45e0aadccc449e83fea45d56385b54
 ![image](https://user-images.githubusercontent.com/74729549/167871258-0a24e1fd-0c87-42c3-ace1-2d32d8120b75.png)
 4) Запускаємо скрипт, який сам встановить необхідні програми: Brew, Python, Git, доп. засоби Баш'у (можливо попросить ввести пароль для установки, 10 Гб вільного місця на диску та натиснути ENTER, щоб продовжити завантаження - тому слідкуйте уважно за виконанням скрипта при першому запуску), та після установки сам запустить proxy_finder:  
 ```shell
+cd ~
 curl -LO https://raw.githubusercontent.com/porthole-ascend-cinnamon/proxy_finder/main/auto_runner_mac.sh && bash auto_runner_mac.sh 2500
 ```
 де 2500 можна замінити на будь-яке значення від 1 до 10000, але **ми рекомендуємо саме 2500, які стоять за замовчуванням**  
@@ -32,6 +33,7 @@ curl -LO https://raw.githubusercontent.com/porthole-ascend-cinnamon/proxy_finder
 1) Відкрити Термінал, як у пункту вище  
 2) Запускаємо скрипт, який сам встановить необхідні програми: Brew, Python, Git, доп. засоби Баш'у (можливо попросить ввести пароль для установки, 10 Гб вільного місця на диску та натиснути ENTER, щоб продовжити завантаження - тому слідкуйте уважно за виконанням скрипта при першому запуску), та після установки сам запустить mhddos_proxy та proxy_finder:    
 ```shell
+cd ~
 curl -LO https://raw.githubusercontent.com/alexnest-ua/auto_mhddos_mac/main/runner.sh && bash runner.sh 2000 2000 -d
 ```
 Більш детально про всі параметри можна почитати тут: https://github.com/alexnest-ua/auto_mhddos_mac - цей скрипт дозволяє запустити одночасно mhddos_proxy та  proxy_finder, який ще й автоматично оновлює не лише себе, а й mhddos_proxy та proxy_finder, та бере актуальні цілі звідси: https://t.me/ddos_separ  
