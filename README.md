@@ -15,14 +15,14 @@
 
 # Встановлення та запуск
 
-[**Windows**](https://github.com/porthole-ascend-cinnamon/proxy_finder/blob/main/instructions/Windows.md)  
+[**Windows**](/instructions/Windows.md)  
   
-[**Linux**](https://github.com/porthole-ascend-cinnamon/proxy_finder/blob/main/instructions/Linux.md)  
+[**Linux**](/instructions/Linux.md)  
   
-[**Mac**](https://github.com/porthole-ascend-cinnamon/proxy_finder/blob/main/instructions/Mac.md)  
+[**Mac**](/instructions/Mac.md)  
   
-[**Android**](https://github.com/porthole-ascend-cinnamon/proxy_finder/blob/main/instructions/Android.md)  
+[**Android**](/instructions/Android.md)  
   
-[**Docker**](https://github.com/porthole-ascend-cinnamon/proxy_finder/blob/main/instructions/Docker.md)
+[**Docker**](/instructions/Docker.md)
 
 Якщо виникли будь-які проблеми на будь-якому етапі пишіть в телеграм: @brainqdead
