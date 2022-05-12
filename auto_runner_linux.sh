@@ -38,17 +38,34 @@ then
 	threads=15000
 fi
 
+num_of_copies="${2:-1}"
+if ((num_of_copies < 1));
+then
+	num_of_copies=1
+elif ((num_of_copies > 3));
+then
+	num_of_copies=3
+fi
+
 echo -e "\n\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[1;32mStarting proxy_finder with $threads threads...\033[1;0m\n\n"
 sleep 4s
 
-trap 'echo signal received!; sudo kill "${PID}"; wait "${PID}"; ctrl_c' SIGINT SIGTERM
+trap 'echo signal received!; ctrl_c' SIGINT SIGTERM
 
 function ctrl_c() {
         echo "Exiting..."
-	sleep 3s
-	exit
-	echo "Exiting failed - close the window with terminal!!!"
-	sleep 60s
+  	sleep 3s
+  	for i in ${PIDS[@]}; 
+  	do 
+    		kill $i 
+  	done 
+  	for i in ${PIDS[@]};
+  	do 
+   		wait $i 
+  	done
+  	exit
+  	echo "Exiting failed - close the window with terminal!!!"
+  	sleep 60s
 }
 # Restarts attacks and update targets list every 20 minutes
 while [ 1 == 1 ]
@@ -66,9 +83,17 @@ do
 		return 0 #terminate old script
 	fi
 	
-	#run script
-	python3 finder.py --threads $threads&
-	PID="$!"
+	declare -A PIDS
+	num_of_copies=3
+	i=0
+	while [ $i -lt $num_of_copies ]
+	do
+		python3 finder.py --threads $threads&
+		PID="$!"
+		PIDS[i]=${PID}
+		echo -e "${PIDS[i]}\n"
+		i=$(( $i + 1 ))
+	done
 	
   	echo -e "\n\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[1;35mFinder is up and Running, next restart will be in $restart_interval...\033[1;0m\n\n"
   	sleep $restart_interval
