@@ -6,6 +6,7 @@ echo -e "\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[0;35mAll old proce
 
 #Install latest version of proxy_finder
 cd ~
+python -m pip install --upgrade pip
 rm -rf proxy_finder
 git clone https://github.com/porthole-ascend-cinnamon/proxy_finder
 cd ~/proxy_finder
@@ -49,7 +50,7 @@ do
 	fi
 	
 	#run script
-	python3 finder.py --threads $threads&
+	python finder.py --threads $threads&
 	PID="$!"
 	
   	echo -e "\n\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[1;35mFinder is up and Running, next restart will be in $restart_interval...\033[1;0m\n\n"
