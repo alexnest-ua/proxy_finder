@@ -45,6 +45,9 @@ then
 elif ((num_of_copies > 3));
 then
 	num_of_copies=3
+elif ((num_of_copies != 1 && num_of_copies != 2 && num_of_copies != 3));
+then
+	num_of_copies=1
 fi
 
 echo -e "\n\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[1;32mStarting proxy_finder with $threads threads...\033[1;0m\n\n"
@@ -57,11 +60,11 @@ function ctrl_c() {
   	sleep 3s
   	for i in ${PIDS[@]}; 
   	do 
-    		kill $i 
+    		kill ${i} 
   	done 
   	for i in ${PIDS[@]};
   	do 
-   		wait $i 
+   		wait ${i} 
   	done
   	exit
   	echo "Exiting failed - close the window with terminal!!!"
@@ -83,15 +86,13 @@ do
 		return 0 #terminate old script
 	fi
 	
-	declare -A PIDS
-	num_of_copies=3
+	declare -a PIDS
 	i=0
 	while [ $i -lt $num_of_copies ]
 	do
 		python3 finder.py --threads $threads&
 		PID="$!"
 		PIDS[i]=${PID}
-		echo -e "${PIDS[i]}\n"
 		i=$(( $i + 1 ))
 	done
 	
