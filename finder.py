@@ -81,7 +81,9 @@ async def report_success(report_url, proxy):
     if result:
         logger.info(f'{cl.GREEN}Proxy {str(proxy)} sent, thanks!{cl.RESET}')
     else:
-        logger.warning(f'{cl.RED}Proxy {proxy} could not be send - please contact admin @ddosseparbot{cl.RESET}')
+        logger.warning(
+            f'{cl.RED}Proxy {proxy} could not be send - please contact admin @ddosseparbot{cl.RESET}'
+        )
 
 
 CHECKED = FOUND = 0
@@ -125,7 +127,8 @@ async def statistic(file):
     while True:
         period = 30
         logger.info(
-            f'{cl.YELLOW}Checked proxies: {cl.BLUE}{CHECKED}{cl.YELLOW} | Found proxies: {cl.BLUE}{FOUND}{cl.RESET}'
+            f'{cl.YELLOW}Checked proxies: {cl.BLUE}{CHECKED:,}{cl.YELLOW} | '
+            f'Found proxies: {cl.BLUE}{FOUND:,}{cl.RESET}'
         )
         file.flush()
         await asyncio.sleep(period)
