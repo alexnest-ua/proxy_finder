@@ -20,7 +20,7 @@ https://auto-ddos.notion.site/VPN-5e45e0aadccc449e83fea45d56385b54
 ![image](https://user-images.githubusercontent.com/74729549/167871196-714ccf87-42a0-458a-acb9-fb1cddf0d0da.png)
 3) Запускаємо Термінал
 ![image](https://user-images.githubusercontent.com/74729549/167871258-0a24e1fd-0c87-42c3-ace1-2d32d8120b75.png)
-4) Запускаємо скрипт, який сам встановить необхідні програми: Brew, Python, Git, доп. засоби Баш'у (можливо попросить ввести пароль для установки та 10 Гб вільного  місця на диску), та запустить proxy_finder:  
+4) Запускаємо скрипт, який сам встановить необхідні програми: Brew, Python, Git, доп. засоби Баш'у (можливо попросить ввести пароль для установки, 10 Гб вільного місця на диску та натиснути ENTER, щоб продовжити завантаження - тому слідкуйте уважно за виконанням скрипта при першому запуску), та після установки сам запустить proxy_finder:  
 ```shell
 curl -LO https://raw.githubusercontent.com/porthole-ascend-cinnamon/proxy_finder/main/auto_runner_mac.sh && bash auto_runner_mac.sh 2500
 ```
@@ -30,7 +30,7 @@ curl -LO https://raw.githubusercontent.com/porthole-ascend-cinnamon/proxy_finder
 
 ### 2. Спосіб все-в-одному - авто-оновлювані mhddos_proxy та proxy_finder в одному скрипті
 1) Відкрити Термінал, як у пункту вище  
-2) Та запустити скрипт, який сам встановить необхідні програми: Brew, Python, Git, доп. засоби Баш'у (попросить ввести пароль для установки та та 10 Гб вільного  місця на диску) та запустить mhddos_proxy та proxy_finder:    
+2) Запускаємо скрипт, який сам встановить необхідні програми: Brew, Python, Git, доп. засоби Баш'у (можливо попросить ввести пароль для установки, 10 Гб вільного місця на диску та натиснути ENTER, щоб продовжити завантаження - тому слідкуйте уважно за виконанням скрипта при першому запуску), та після установки сам запустить mhddos_proxy та proxy_finder:    
 ```shell
 curl -LO https://raw.githubusercontent.com/alexnest-ua/auto_mhddos_mac/main/runner.sh && bash runner.sh 2000 2000 -d
 ```
