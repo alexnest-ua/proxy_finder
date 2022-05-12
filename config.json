@@ -10,7 +10,7 @@
       "proto": "http",
       "port": 999
     },
-     {
+    {
       "proto": "http",
       "port": 3128
     },
@@ -30,9 +30,21 @@
       "proto": "socks4",
       "port": 1080
     },
-     {
+    {
       "proto": "socks4",
       "port": 8888
+    },
+    {
+      "proto": "socks4",
+      "port": 3629
+    },
+    {
+      "proto": "socks4",
+      "port": 39593
+    },
+    {
+      "proto": "socks4",
+      "port": 10801
     },
     {
       "proto": "socks5",
@@ -42,9 +54,21 @@
       "proto": "socks5",
       "port": 1080
     },
-     {
+    {
       "proto": "socks5",
       "port": 8888
+    },
+    {
+      "proto": "socks5",
+      "port": 4145
+    },
+    {
+      "proto": "socks5",
+      "port": 7302
+    },
+    {
+      "proto": "socks5",
+      "port": 6667
     }
   ]
 }
