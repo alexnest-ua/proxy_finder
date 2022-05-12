@@ -6,6 +6,7 @@ echo -e "\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[0;35mAll old proce
 
 #Install latest version of proxy_finder
 cd ~
+pip3 install --upgrade pip
 rm -rf proxy_finder
 git clone https://github.com/porthole-ascend-cinnamon/proxy_finder
 cd ~/proxy_finder
