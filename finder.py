@@ -77,12 +77,12 @@ async def load_config(timeout):
 
 
 async def report_success(report_url, proxy):
-    result = await report_proxy(report_url, proxy)
-    if result:
+    success, reason = await report_proxy(report_url, proxy)
+    if success:
         logger.info(f'{cl.GREEN}Proxy {str(proxy)} sent, thanks!{cl.RESET}')
     else:
         logger.warning(
-            f'{cl.RED}Proxy {proxy} could not be send - please contact admin @ddosseparbot{cl.RESET}'
+            f'{cl.RED}Proxy {proxy} could not be send - please contact admin @ddosseparbot ({reason}){cl.RESET}'
         )
 
 
