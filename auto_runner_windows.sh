@@ -16,8 +16,6 @@ echo -e "\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[1;32mFiles install
 
 restart_interval="180m"
 
-ulimit -n 1048576
-
 threads="${1:-5000}"
 if ((threads < 2000));
 then
