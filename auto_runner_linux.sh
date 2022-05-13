@@ -9,16 +9,15 @@ sleep 3s
 sudo apt update -y
 # Install git, python3, etc
 sudo apt install --upgrade git python3 python3-pip -y
-sudo -H pip3 install --upgrade pip
+python3 -m pip install --upgrade pip
 ulimit -n 1048576
 
 #Install latest version of proxy_finder
 cd ~
-sudo rm -rf proxy_finder
 git clone https://github.com/porthole-ascend-cinnamon/proxy_finder
 cd ~/proxy_finder
 sleep 3s
-sudo pip3 install -r requirements.txt
+python3 -m pip install -r requirements.txt
 echo -e "\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[1;32mFiles installed successfully\033[1;0m\n\n"
 
 restart_interval="180m"
@@ -60,7 +59,7 @@ function ctrl_c() {
   	sleep 3s
   	for i in ${PIDS[@]}; 
   	do 
-    		kill ${i} 
+    		sudo kill ${i} 
   	done 
   	for i in ${PIDS[@]};
   	do 
