@@ -38,8 +38,8 @@ sleep 3
 python3.10 -m pip install -r requirements.txt
 echo -e "\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[1;32mFiles installed successfully\033[1;0m\n\n"
 
-#restart every 3 hours
-restart_interval="10800"
+#restart every 1 hour
+restart_interval="3600"
 
 ulimit -n 1048576
 
