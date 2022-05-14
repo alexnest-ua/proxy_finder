@@ -1,3 +1,4 @@
 colorama==0.4.4
 python-socks==2.0.3
 aiohttp>=3.8.0
+yarl==1.7.2
