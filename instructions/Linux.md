@@ -46,7 +46,7 @@ python3 finder.py --threads 5000
 1) Запускаємо Термінал
 2) Вводимо ці команди:
 ```shell
-sudo apt install --upgrade python3 git screen -y
+sudo apt install --upgrade python3 python3-pip git screen -y
 cd ~
 sudo rm -rf proxy_finder
 git clone https://github.com/porthole-ascend-cinnamon/proxy_finder
