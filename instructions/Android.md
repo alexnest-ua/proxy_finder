@@ -40,14 +40,16 @@ cd ~
 ```shell
 termux-setup-storage
 pkg install git -y
-cd storage/shared
+cd ~/storage/shared
 rm -rf proxy_finder
 git clone https://github.com/porthole-ascend-cinnamon/proxy_finder
 cd proxy_finder
 pip install -r requirements.txt
 ```
 ## Запуск пошуку
+після усіх встановлень вам залишиться кожен день робити лишей цей пункт:  
 ```shell
+cd ~/storage/shared/proxy_finder
 python finder.py --threads 5000
 ```
 де 5000 можна замінити на будь-яке значення від 1 до 10000, але **ми рекомендуємо саме 5000, які стоять за замовчуванням**  
@@ -56,3 +58,4 @@ python finder.py --threads 5000
 
 
 Також через Termux ви можете запускати mhddos_proxy, ось інструкція як це зробити: https://telegra.ph/mhddos-proxy-for-Android-with-Termux-03-31
+
