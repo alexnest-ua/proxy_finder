@@ -146,16 +146,19 @@ async def reload_config(config, timeout):
             logger.warning(f'Error while updating config: {repr(exc)}')
 
 
-async def main(outfile):
+async def async_main(outfile, max_conns):
     parser = argparse.ArgumentParser()
     parser.add_argument('--threads', type=int, default=THREADS_LIMIT // 3)
     parser.add_argument('--timeout', type=int, default=None)
     args = parser.parse_args()
 
     threads = args.threads
-    if threads > THREADS_LIMIT:
-        logger.warning(f'{cl.MAGENTA}Limited at {THREADS_LIMIT} threads!{cl.RESET}')
-        threads = THREADS_LIMIT
+    limit = THREADS_LIMIT
+    if max_conns:
+        limit = min(limit, max_conns - 50)
+    if threads > limit:
+        logger.warning(f'{cl.MAGENTA}Starting with {limit} threads available{cl.RESET}')
+        threads = limit
 
     if not await is_latest_version():
         logger.warning(f'{cl.RED}New version available - please update (git pull){cl.RESET}')
@@ -179,9 +182,13 @@ async def main(outfile):
     await asyncio.wait(tasks)
 
 
-def main_wrapper():
-    fix_ulimits()
+def main(outfile, max_conns):
     loop = setup_event_loop()
+    loop.run_until_complete(async_main(outfile, max_conns))
+
+
+def main_wrapper():
+    max_conns = fix_ulimits()
 
     filename = f'proxy_{int(time.time())}.txt'
     logger.info(
@@ -190,7 +197,7 @@ def main_wrapper():
     )
     outfile = open(filename, 'w')
     try:
-        Thread(target=lambda: loop.run_until_complete(main(outfile)), daemon=True).start()
+        Thread(target=main, args=(outfile, max_conns), daemon=True).start()
         while True:
             time.sleep(60)
     except KeyboardInterrupt:

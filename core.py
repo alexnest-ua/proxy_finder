@@ -46,11 +46,19 @@ def fix_ulimits():
     try:
         import resource
     except ImportError:
-        return
+        return None
 
+    min_hard = 2 ** 16
     soft, hard = resource.getrlimit(resource.RLIMIT_NOFILE)
-    if soft < hard:
-        resource.setrlimit(resource.RLIMIT_NOFILE, (hard, hard))
+    # Try to raise hard limit if it's too low
+    if hard < min_hard:
+        with suppress(Exception):
+            resource.setrlimit(resource.RLIMIT_NOFILE, (min_hard, min_hard))
+            return min_hard
+
+    # At least raise soft limit to the hard limit
+    resource.setrlimit(resource.RLIMIT_NOFILE, (hard, hard))
+    return hard
 
 
 async def _make_request(proxy, url, expected, ip, timeout):
