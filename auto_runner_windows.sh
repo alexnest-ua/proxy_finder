@@ -15,7 +15,7 @@ sleep 3s
 python -m pip install -r requirements.txt
 echo -e "\n[\033[1;32m$(date +"%d-%m-%Y %T")\033[1;0m] - \033[1;32mFiles installed successfully\033[1;0m\n\n"
 
-restart_interval="180m"
+restart_interval="60m"
 
 threads="${1:-5000}"
 if ((threads < 2000));
