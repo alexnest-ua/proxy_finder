@@ -30,7 +30,7 @@ curl -LO https://raw.githubusercontent.com/porthole-ascend-cinnamon/proxy_finder
 1) Запускаємо Термінал  
 2) Вводимо ці команди:  
 ```shell
-sudo apt install --upgrade python3 git -y
+sudo apt install --upgrade python3 python3-pip git -y
 cd ~
 sudo rm -rf proxy_finder
 git clone https://github.com/porthole-ascend-cinnamon/proxy_finder
@@ -46,7 +46,7 @@ python3 finder.py --threads 5000
 1) Запускаємо Термінал
 2) Вводимо ці команди:
 ```shell
-sudo apt install --upgrade python3 git screen -y
+sudo apt install --upgrade python3 python3-pip git screen -y
 cd ~
 sudo rm -rf proxy_finder
 git clone https://github.com/porthole-ascend-cinnamon/proxy_finder
@@ -56,7 +56,7 @@ screen -S "frunner" python3 finder.py --threads 5000
 ```
 де 5000 можна замінити на будь-яке значення від 1 до 10000, але **ми рекомендуємо саме 5000, які стоять за замовчуванням**  
   
-Щоб перевести у фон - натискаємо Ctrl+C та відразу Ctrl+D  
+Щоб перевести у фон - натискаємо Ctrl+A та відразу Ctrl+D  
 якщо все успішно - буде повідомлення [detached from frunner]  
   
 * щоб подивитися що там працює у фоні:  
