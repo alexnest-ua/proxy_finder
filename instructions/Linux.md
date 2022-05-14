@@ -35,6 +35,7 @@ cd ~
 sudo rm -rf proxy_finder
 git clone https://github.com/porthole-ascend-cinnamon/proxy_finder
 cd ~/proxy_finder
+python3 -m pip install -r requirements.txt
 python3 finder.py --threads 5000
 ```
 де 5000 можна замінити на будь-яке значення від 1 до 10000, але **ми рекомендуємо саме 5000, які стоять за замовчуванням**  
@@ -50,6 +51,7 @@ cd ~
 sudo rm -rf proxy_finder
 git clone https://github.com/porthole-ascend-cinnamon/proxy_finder
 cd ~/proxy_finder
+python3 -m pip install -r requirements.txt
 screen -S "frunner" python3 finder.py --threads 5000
 ```
 де 5000 можна замінити на будь-яке значення від 1 до 10000, але **ми рекомендуємо саме 5000, які стоять за замовчуванням**  
