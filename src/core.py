@@ -11,7 +11,7 @@ import async_timeout
 from python_socks.async_.asyncio import Proxy, Socks5Proxy
 from yarl import URL
 
-from httpparser import HttpParser
+from .httpparser import HttpParser
 
 
 logging.basicConfig(format='[%(asctime)s - %(levelname)s] %(message)s', datefmt="%H:%M:%S")

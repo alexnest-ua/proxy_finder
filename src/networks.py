@@ -38,7 +38,7 @@ def _reduce(ranges):
     return new_ranges
 
 
-with open('exclude.txt', 'r') as f:
+with open('src/exclude.txt', 'r') as f:
     _EXCLUDES = _reduce(list(_get_excludes_from_file(f)))
 
 

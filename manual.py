@@ -2,7 +2,7 @@ import argparse
 import asyncio
 import time
 
-from core import JUDGES, Proxy, THREADS_LIMIT, check_proxy, fix_ulimits, logger, setup_event_loop
+from src.core import JUDGES, Proxy, THREADS_LIMIT, check_proxy, fix_ulimits, logger, setup_event_loop
 
 
 working_proxies = set()

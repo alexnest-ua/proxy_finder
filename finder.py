@@ -16,9 +16,9 @@ from aiohttp.client_exceptions import ClientError
 from colorama import Fore
 from python_socks import ProxyType
 
-from core import JUDGES, Proxy, THREADS_LIMIT, check_proxy, fix_ulimits, logger, setup_event_loop
-from networks import get_random_ip
-from report import report_proxy
+from src.core import JUDGES, Proxy, THREADS_LIMIT, check_proxy, fix_ulimits, logger, setup_event_loop
+from src.networks import get_random_ip
+from src.report import report_proxy
 
 
 CONFIG_URL = 'https://raw.githubusercontent.com/porthole-ascend-cinnamon/proxy_finder/main/config.json'
