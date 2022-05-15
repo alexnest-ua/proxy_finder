@@ -25,6 +25,7 @@ restart_interval="60m"
 ulimit -n 1048576
 
 sudo chown -R ${USER}:${USER} ~/proxy_finder
+sudo chown -R ${USER}:${USER} /home/${USER}/proxy_finder
 sudo git config --global --add safe.directory /home/${USER}/proxy_finder
 
 threads="${1:-5000}"
