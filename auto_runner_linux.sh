@@ -10,6 +10,7 @@ sudo apt update -y
 # Install git, python3, etc
 sudo apt install --upgrade git python3 python3-pip -y
 python3 -m pip install --upgrade pip
+python3 -m pip install uvloop
 ulimit -n 1048576
 
 #Install latest version of proxy_finder
