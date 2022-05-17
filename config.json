@@ -1,11 +1,7 @@
 {
-  "timeout": 7,
+  "timeout": 8,
   "report_url": "BxE6AR1pSX8ELTgMJB45KwIZAi8+CEo8Pl0eQx1EXS4hXFomSzxZQAMPNFU5IDBuABosLigISS8+IjIJFWcHICAEdCEEeA4uS0UpNhEYPw0dHg8tEQIOSC0rYQYaITcxJgsHVWYINxcYIis/",
   "targets": [
-    {
-      "proto": "http",
-      "port": 83
-    },
     {
       "proto": "http",
       "port": 999
@@ -25,10 +21,6 @@
     {
       "proto": "http",
       "port": 8118
-    },
-    {
-      "proto": "http",
-      "port": 9812
     },
     {
       "proto": "http",
@@ -56,10 +48,6 @@
     },
     {
       "proto": "socks4",
-      "port": 8888
-    },
-    {
-      "proto": "socks4",
       "port": 57114
     },
     {
@@ -73,10 +61,6 @@
     {
       "proto": "socks5",
       "port": 7302
-    },
-    {
-      "proto": "socks5",
-      "port": 8888
     },
     {
       "proto": "socks5",
