@@ -51,13 +51,13 @@ cd ~
 sudo rm -rf proxy_finder
 git clone https://github.com/porthole-ascend-cinnamon/proxy_finder
 cd ~/proxy_finder
-python3 -m pip install -r requirements.txt
-screen -S "frunner" python3 finder.py --threads 5000
+screen -S "finder" bash auto_runner_linux.sh 5000 2
 ```
 де 5000 можна замінити на будь-яке значення від 1 до 10000, але **ми рекомендуємо саме 5000, які стоять за замовчуванням**  
+а значення 2 на бажану кількість паралельний пошуків(але не більше 3)  
   
 Щоб перевести у фон - натискаємо Ctrl+A та відразу Ctrl+D  
-якщо все успішно - буде повідомлення [detached from frunner]  
+якщо все успішно - буде повідомлення [detached from finder]  
   
 * щоб подивитися що там працює у фоні:  
 ```shell 
@@ -65,7 +65,7 @@ screen -ls
 ```
 * щоб перейти до процесу та дізнатися як у нього справи (що він виводить), пишіть:  
 ```shell 
-screen -r frunner  
+screen -r finder  
 ```
 Після цього, якщо хочете **ВБИТИ** процес - натискайте Ctrl+C(бажано декілька разів), або якщо не спрацює - у іншому вікні пишіть `sudo pkill -e -f frunner`  
 у випадку якщо вбили успішно буде повідомлення: [screen is terminating]  
