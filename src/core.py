@@ -33,8 +33,11 @@ THREADS_LIMIT = 15000
 # TODO: check whether judge is up and running
 JUDGES = cycle([
     (URL('http://wfuchs.de/azenv.php'), b'<title>AZ Environment', socket.gethostbyname('wfuchs.de')),
-    (URL('http://www.meow.org.uk/cgi-bin/env.pl'), b'<pre>CONTEXT_DOCUMENT_ROOT=/var/www/meow.org.uk/cgi-bin/',
-     socket.gethostbyname('www.meow.org.uk')),
+    (
+        URL('http://www.meow.org.uk/cgi-bin/env.pl'),
+        b'<pre>CONTEXT_DOCUMENT_ROOT=/var/www/meow.org.uk/cgi-bin/',
+        socket.gethostbyname('www.meow.org.uk')
+    ),
     (URL('http://mojeip.net.pl/asdfa/azenv.php'), b'<title>AZ Environment', socket.gethostbyname('mojeip.net.pl')),
     (URL('http://azenv.net/'), b'<title>AZ Environment', socket.gethostbyname('azenv.net')),
     (URL('http://httpheader.net/azenv.php'), b'<title>AZ Environment', socket.gethostbyname('httpheader.net')),
