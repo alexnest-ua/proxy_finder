@@ -44,7 +44,7 @@ cd ~/storage/shared
 rm -rf proxy_finder
 git clone https://github.com/porthole-ascend-cinnamon/proxy_finder
 cd proxy_finder
-pip install -r requirements.txt
+pip install -r termux_requirements.txt
 ```
 ## Запуск пошуку
 після усіх встановлень вам залишиться кожен день робити лишей цей пункт:  
