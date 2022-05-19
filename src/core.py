@@ -5,6 +5,7 @@ import socket
 import sys
 import warnings
 from asyncio import events
+from asyncio.log import logger as asyncio_logger
 from contextlib import suppress
 from itertools import cycle
 
@@ -15,11 +16,25 @@ from yarl import URL
 from .httpparser import HttpParser
 
 
+class RemoveUselessWarnings(logging.Filter):
+    def filter(self, record):
+        return all((
+            "socket.send() raised exception." not in record.getMessage(),
+            "SSL connection is closed" not in record.getMessage()
+        ))
+
+
+WINDOWS = sys.platform == "win32"
+WINDOWS_WAKEUP_SECONDS = 0.5
+
 warnings.filterwarnings("ignore")
 
 logging.basicConfig(format='[%(asctime)s - %(levelname)s] %(message)s', datefmt="%H:%M:%S")
 logger = logging.getLogger('proxy_checker')
 logger.setLevel('INFO')
+
+# Make asyncio logger a little bit less noisy
+asyncio_logger.addFilter(RemoveUselessWarnings())
 
 __all__ = [
     'Proxy',
@@ -159,16 +174,40 @@ def _patch_proactor_connection_lost():
     setattr(_ProactorBasePipeTransport, "_call_connection_lost", _safe_connection_lost)
 
 
-def setup_event_loop():
-    WINDOWS = sys.platform == "win32"
+async def _windows_support_wakeup() -> None:
+    """See more info here:
+        https://bugs.python.org/issue23057#msg246316
+    """
+    while True:
+        await asyncio.sleep(WINDOWS_WAKEUP_SECONDS)
 
-    if WINDOWS:
+
+def _handle_uncaught_exception(loop: asyncio.AbstractEventLoop, context) -> None:
+    error_message = context.get("exception", context["message"])
+    logger.debug(f"Uncaught event loop exception: {error_message}")
+
+
+def setup_event_loop() -> asyncio.AbstractEventLoop:
+    uvloop = False
+    try:
+        __import__("uvloop").install()
+        uvloop = True
+    except:
+        pass
+
+    if uvloop:
+        loop = events.new_event_loop()
+    elif WINDOWS:
         _patch_proactor_connection_lost()
         loop = asyncio.ProactorEventLoop()
-    elif hasattr(selectors, "PollSelector"):
-        selector = selectors.PollSelector()
+        # This is to allow CTRL-C to be detected in a timely fashion,
+        # see: https://bugs.python.org/issue23057#msg246316
+        loop.create_task(_windows_support_wakeup())
+    elif hasattr(selectors, "DefaultSelector"):
+        selector = selectors.DefaultSelector()
         loop = asyncio.SelectorEventLoop(selector)
     else:
         loop = events.new_event_loop()
+    loop.set_exception_handler(_handle_uncaught_exception)
     asyncio.set_event_loop(loop)
     return loop
