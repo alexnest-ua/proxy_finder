@@ -1,0 +1,5 @@
+colorama==0.4.4
+python-socks==2.0.3
+yarl==1.7.2
+requests==2.27.1
+async_timeout==4.0.2
