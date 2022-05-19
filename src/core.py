@@ -84,7 +84,7 @@ def fix_ulimits():
     if hard < min_limit:
         with suppress(ValueError):
             resource.setrlimit(resource.RLIMIT_NOFILE, (min_limit, min_limit))
-            soft = min_limit
+            soft = hard = min_limit
 
     # Try to raise soft limit to hard limit
     if soft < hard:
