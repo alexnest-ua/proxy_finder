@@ -78,17 +78,26 @@ def fix_ulimits():
     except ImportError:
         return None
 
-    min_hard = 2 ** 16
+    min_limit = 2 ** 14
     soft, hard = resource.getrlimit(resource.RLIMIT_NOFILE)
     # Try to raise hard limit if it's too low
-    if hard < min_hard:
-        with suppress(Exception):
-            resource.setrlimit(resource.RLIMIT_NOFILE, (min_hard, min_hard))
-            return min_hard
+    if hard < min_limit:
+        with suppress(ValueError):
+            resource.setrlimit(resource.RLIMIT_NOFILE, (min_limit, min_limit))
+            soft = min_limit
 
-    # At least raise soft limit to the hard limit
-    resource.setrlimit(resource.RLIMIT_NOFILE, (hard, hard))
-    return hard
+    # Try to raise soft limit to hard limit
+    if soft < hard:
+        with suppress(ValueError):
+            resource.setrlimit(resource.RLIMIT_NOFILE, (hard, hard))
+            soft = hard
+
+    if soft < min_limit:
+        logger.warning(
+            f'{cl.RED}Не вдалося підняти ліміт відкритих файлів - поточний ліміт {soft}{cl.RESET}'
+        )
+
+    return soft
 
 
 async def _make_request(proxy, url, expected, ip, timeout):
