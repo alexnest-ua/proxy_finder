@@ -78,7 +78,7 @@ def fix_ulimits():
     except ImportError:
         return None
 
-    min_limit = 2 ** 14
+    min_limit = 2 ** 15
     soft, hard = resource.getrlimit(resource.RLIMIT_NOFILE)
     # Try to raise hard limit if it's too low
     if hard < min_limit:
