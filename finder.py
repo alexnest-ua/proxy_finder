@@ -12,10 +12,9 @@ from itertools import cycle
 from threading import Thread
 
 import requests
-from colorama import Fore
 from python_socks import ProxyType
 
-from src.core import JUDGES, Proxy, THREADS_LIMIT, check_proxy, fix_ulimits, logger, setup_event_loop
+from src.core import JUDGES, Proxy, THREADS_LIMIT, check_proxy, cl, fix_ulimits, logger, setup_event_loop
 from src.networks import get_random_ip
 from src.report import sync_report_proxy
 
@@ -50,15 +49,6 @@ async def is_latest_version():
     with open('version.txt', 'r') as f:
         current = int(f.read().strip())
     return current >= latest
-
-
-class cl:
-    MAGENTA = Fore.LIGHTMAGENTA_EX
-    BLUE = Fore.LIGHTBLUE_EX
-    GREEN = Fore.LIGHTGREEN_EX
-    YELLOW = Fore.LIGHTYELLOW_EX
-    RED = Fore.LIGHTRED_EX
-    RESET = Fore.RESET
 
 
 async def load_config(timeout):

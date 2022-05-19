@@ -10,6 +10,7 @@ from contextlib import suppress
 from itertools import cycle
 
 import async_timeout
+from colorama import Fore
 from python_socks.async_.asyncio import Proxy, Socks5Proxy
 from yarl import URL
 
@@ -60,6 +61,15 @@ JUDGES = cycle([
     (URL('http://azenv.net/'), b'<title>AZ Environment', socket.gethostbyname('azenv.net')),
     (URL('http://httpheader.net/azenv.php'), b'<title>AZ Environment', socket.gethostbyname('httpheader.net')),
 ])
+
+
+class cl:
+    MAGENTA = Fore.LIGHTMAGENTA_EX
+    BLUE = Fore.LIGHTBLUE_EX
+    GREEN = Fore.LIGHTGREEN_EX
+    YELLOW = Fore.LIGHTYELLOW_EX
+    RED = Fore.LIGHTRED_EX
+    RESET = Fore.RESET
 
 
 def fix_ulimits():
@@ -192,6 +202,10 @@ def setup_event_loop() -> asyncio.AbstractEventLoop:
     try:
         __import__("uvloop").install()
         uvloop = True
+        logger.info(
+            f"{cl.GREEN}'uvloop' успішно активований "
+            f"(підвищенна ефективність роботи з мережею){cl.RESET}"
+        )
     except:
         pass
 
