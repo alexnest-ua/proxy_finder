@@ -94,7 +94,7 @@ def fix_ulimits():
 
     if soft < min_limit:
         logger.warning(
-            f'{cl.RED}Не вдалося підняти ліміт відкритих файлів - поточний ліміт {soft}{cl.RESET}'
+            f'{cl.RED}Unable to raise open files limit - current limit is {soft}{cl.RESET}'
         )
 
     return soft
