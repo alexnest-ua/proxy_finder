@@ -3,6 +3,7 @@ import logging
 import selectors
 import socket
 import sys
+import warnings
 from asyncio import events
 from contextlib import suppress
 from itertools import cycle
@@ -13,6 +14,8 @@ from yarl import URL
 
 from .httpparser import HttpParser
 
+
+warnings.filterwarnings("ignore")
 
 logging.basicConfig(format='[%(asctime)s - %(levelname)s] %(message)s', datefmt="%H:%M:%S")
 logger = logging.getLogger('proxy_checker')

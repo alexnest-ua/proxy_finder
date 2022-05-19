@@ -11,31 +11,33 @@ import time
 from itertools import cycle
 from threading import Thread
 
-from aiohttp import ClientSession, TCPConnector
-from aiohttp.client_exceptions import ClientError
+import requests
 from colorama import Fore
 from python_socks import ProxyType
 
 from src.core import JUDGES, Proxy, THREADS_LIMIT, check_proxy, fix_ulimits, logger, setup_event_loop
 from src.networks import get_random_ip
-from src.report import report_proxy
+from src.report import sync_report_proxy
 
 
 CONFIG_URL = 'https://raw.githubusercontent.com/porthole-ascend-cinnamon/proxy_finder/main/config.json'
 VERSION_URL = 'https://raw.githubusercontent.com/porthole-ascend-cinnamon/proxy_finder/main/version.txt'
 
 
-async def fetch(url: str):
-    attempts = 3
-    async with ClientSession(connector=TCPConnector(ssl=False)) as session:
-        for _ in range(attempts):
-            try:
-                async with session.get(url, timeout=5) as response:
-                    response.raise_for_status()
-                    return await response.text()
-            except (ClientError, asyncio.TimeoutError):
-                pass
+def sync_fetch(url: str):
+    for _ in range(5):
+        try:
+            response = requests.get(url, verify=False, timeout=30)
+            response.raise_for_status()
+            return response.text
+        except requests.RequestException:
+            pass
     return None
+
+
+async def fetch(url: str):
+    loop = asyncio.get_running_loop()
+    return await loop.run_in_executor(None, sync_fetch, url)
 
 
 async def is_latest_version():
@@ -74,6 +76,11 @@ async def load_config(timeout):
             for target in data['targets']
         ])
     }
+
+
+async def report_proxy(report_url, proxy):
+    loop = asyncio.get_running_loop()
+    return await loop.run_in_executor(None, sync_report_proxy, report_url, proxy)
 
 
 async def report_success(report_url, proxy):
