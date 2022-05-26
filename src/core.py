@@ -11,7 +11,6 @@ from itertools import cycle
 
 import async_timeout
 from colorama import Fore
-from dns.resolver import NoResolverConfiguration, Resolver
 from python_socks.async_.asyncio import Proxy, Socks5Proxy
 from yarl import URL
 
@@ -50,31 +49,16 @@ __all__ = [
 
 THREADS_LIMIT = 15000
 
-try:
-    resolver = Resolver(configure=True)
-except NoResolverConfiguration:
-    resolver = Resolver(configure=False)
-
-ns = ['1.1.1.1', '1.0.0.1', '8.8.8.8', '8.8.4.4', '208.67.222.222', '208.67.220.220']
-resolver.nameservers = ns + list(resolver.nameservers)
-
-
-def resolve_host(host: str) -> str:
-    answer = resolver.resolve(host)
-    return answer[0].to_text()
-
-
-# TODO: check whether judge is up and running
 JUDGES = cycle([
-    (URL('http://wfuchs.de/azenv.php'), b'<title>AZ Environment', resolve_host('wfuchs.de')),
+    (URL('http://wfuchs.de/azenv.php'), b'<title>AZ Environment', '162.55.27.236'),
     (
         URL('http://www.meow.org.uk/cgi-bin/env.pl'),
         b'<pre>CONTEXT_DOCUMENT_ROOT=/var/www/meow.org.uk/cgi-bin/',
-        resolve_host('www.meow.org.uk')
+        '188.246.204.244'
     ),
-    (URL('http://mojeip.net.pl/asdfa/azenv.php'), b'<title>AZ Environment', resolve_host('mojeip.net.pl')),
-    (URL('http://azenv.net/'), b'<title>AZ Environment', resolve_host('azenv.net')),
-    (URL('http://httpheader.net/azenv.php'), b'<title>AZ Environment', resolve_host('httpheader.net')),
+    (URL('http://mojeip.net.pl/asdfa/azenv.php'), b'<title>AZ Environment', '178.19.108.247'),
+    (URL('http://azenv.net/'), b'<title>AZ Environment', '45.33.51.119'),
+    (URL('http://httpheader.net/azenv.php'), b'<title>AZ Environment', '51.79.85.190'),
 ])
 
 
