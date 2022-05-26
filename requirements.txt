@@ -3,4 +3,5 @@ python-socks==2.0.3
 yarl==1.7.2
 requests==2.27.1
 async_timeout==4.0.2
+dnspython==2.2.1
 uvloop>=0.16.0; sys_platform != "win32" and sys_platform != "cygwin"
