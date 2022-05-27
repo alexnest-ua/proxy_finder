@@ -59,7 +59,7 @@ trap 'echo signal received!; ctrl_c' SIGINT SIGTERM
 
 function ctrl_c() {
         echo "Exiting..."
-  	sleep 3s
+  	sleep 1s
   	for i in ${PIDS[@]}; 
   	do 
     		sudo kill ${i} 
