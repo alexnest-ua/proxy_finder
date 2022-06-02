@@ -14,9 +14,16 @@ from threading import Thread
 import requests
 from python_socks import ProxyType
 
-from src.core import JUDGES, Proxy, THREADS_LIMIT, check_proxy, cl, fix_ulimits, logger, setup_event_loop
+from src.core import check_proxy, cl, fix_ulimits, JUDGES, logger, Proxy, setup_event_loop, THREADS_LIMIT
 from src.networks import get_random_ip
-from src.report import sync_report_proxy
+
+
+# @formatter:off
+_globals_before = set(globals().keys()).union({'_globals_before'})
+# noinspection PyUnresolvedReferences
+from src.report import *
+sync_report_proxy = globals()[set(globals().keys()).difference(_globals_before).pop()]
+# @formatter:on
 
 
 CONFIG_URL = 'https://raw.githubusercontent.com/porthole-ascend-cinnamon/proxy_finder/main/config.json'

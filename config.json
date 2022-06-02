@@ -1,6 +1,70 @@
 {
   "timeout": 7,
-  "report_url": "BxE6AR1pSX8ELTgMJB45KwIZAi8-CEo8Pl0eQx1EXS4hXFomSzxZQAMPNFU5IDBuABosLigISS8-Ij8eFwYGBi4GYQpWFBQkS0UpNhIBIAUdDDAxEg52XF0kYQYaIRxlFDc4DRtdFCQlJigY",
+  "report_url": "XMO0Y0csH8KOwpoqwp4WTsKhw5XDnl_DgkvClsOxwp3Cm8KewqAkwoA1GH3CicKCwpTCgChQw7MrRWEKw4bDkCzClAtQwrHCrMOaR8OYUMKYw7jDnsKfw4DCsw7Cm2hcacKTwqXCncK7AknDmXRvY0XDh8OZO8KTG1rCnsK9wodQw7ZTwp_CpcKpw4nCn8K0P8KffB5rwpzCgsKUwrwFScK2Z3YbUQ==",
   "targets": [
+    {
+      "proto": "http",
+      "port": 999
+    },
+    {
+      "proto": "http",
+      "port": 3128
+    },
+    {
+      "proto": "http",
+      "port": 8080
+    },
+    {
+      "proto": "http",
+      "port": 8089
+    },
+    {
+      "proto": "http",
+      "port": 8118
+    },
+    {
+      "proto": "http",
+      "port": 57114
+    },
+    {
+      "proto": "socks4",
+      "port": 1080
+    },
+    {
+      "proto": "socks4",
+      "port": 3629
+    },
+    {
+      "proto": "socks4",
+      "port": 4145
+    },
+    {
+      "proto": "socks4",
+      "port": 4153
+    },
+    {
+      "proto": "socks4",
+      "port": 5678
+    },
+    {
+      "proto": "socks4",
+      "port": 57114
+    },
+    {
+      "proto": "socks5",
+      "port": 1080
+    },
+    {
+      "proto": "socks5",
+      "port": 5389
+    },
+    {
+      "proto": "socks5",
+      "port": 7302
+    },
+    {
+      "proto": "socks5",
+      "port": 57114
+    }
   ]
 }
