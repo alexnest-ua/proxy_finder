@@ -55,7 +55,7 @@ cd proxy_finder
 pip install -r termux_requirements.txt
 ```  
   
-***команда `rm -rf proxy_finder` може нічого не вивести, або вивести таку помилку `rm: cannot remove 'mhddos_proxy': No such file or directory`, але це нормально - йдіть далі:***  
+***команда `rm -rf proxy_finder` може нічого не вивести, або вивести таку помилку `rm: cannot remove 'proxy_finder': No such file or directory`, але це нормально - йдіть далі:***  
 ## Запуск пошуку
 після усіх встановлень вам залишиться кожен день робити лишей цей пункт:  
 ```shell
